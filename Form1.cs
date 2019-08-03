@@ -15,21 +15,53 @@ namespace ColorConverter
     public partial class Form1 : Form
     {
         private Color inputColor;
-        private Regex allSupportedRegex;
+        private static Regex allSupportedRegex;
 
         public Form1()
         {
             InitializeComponent();
-            inputColor = Color.FromArgb(128, 255, 0, 0);
-            /* Well, this took a while to find out. It captures any supported color system in the first group, and then the parameters in seperate groups. Optionally, for rgba, it captures the fractional as a parameter */
-            allSupportedRegex = new Regex(@"^((#)|(HEX)|(RGBA)|(RGB)|(HSL))[\(\s]?(\d+|[0-9a-fA-F]{2}),?\s?(\d+|[0-9a-fA-F]{2}),?\s?(\d+|[0-9a-fA-F]{2}),?\s?(0?[\.|\,]?\d)?[\)\s]?$");
-
-            checkerboardPictureBox.Paint += new PaintEventHandler(this.checkerboardPictureBox_Paint);
-
-            updateColorTexts(inputColor);
         }
-        
-        private void checkerboardPictureBox_Paint(object sender, PaintEventArgs e)
+        /** Form events here **/
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            /* Form1_Load does not happen when this.refresh() is called in changeColorBox - that's a good thing as this only needs to be run once */
+
+            /* Well, this RegEx took a while to find out. It captures any supported color system in the first group, and then the parameters in seperate groups. Optionally, for color systems with alpha channel, it captures the fractional as a parameter */
+            allSupportedRegex = new Regex(@"^((?:#)|(?:HEX)|(?:RGBA)|(?:RGB)|(?:HSL))[\(\s]?((?:\d+%?)|[0-9A-F]{2}),?\s?((?:\d+%?)|[0-9A-F]{2}),?\s?((?:\d+%?)|[0-9A-F]{2}),?\s?(0?[\.\,]?\d*)?[\)\s]?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            //if the form is minimized  
+            //hide it from the task bar  
+            //and show the system tray icon (represented by the NotifyIcon control)  
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                Hide();
+                notifyIcon1.Visible = true;
+            }
+        }
+        private void Form1_GotFocus(object sender, EventArgs e)
+        {
+            CheckClipBoard();
+        }
+
+        private void NotifyIcon1_Click(object sender, EventArgs e)
+        {
+            ShowWindowAgain();
+        }
+
+        private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowWindowAgain();
+        }
+
+        private void QuitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void CheckerboardPictureBox_Paint(object sender, PaintEventArgs e)
         {
             SolidBrush brush = new SolidBrush(inputColor);
             Graphics graphics = e.Graphics;
@@ -38,74 +70,246 @@ namespace ColorConverter
             brush.Dispose();
         }
 
-        private void changeColorBox(Color color)
-        {
-            inputColor = color;
-            this.Refresh();
-        }
-
-        private void updateColorTexts(Color color)
-        {
-            updateHexText(color);
-            updateRGBText(color);
-            updateHslText(color);
-        }
-
-        private void updateHexText(Color color)
-        {
-            hexBox.Text = String.Format("#RRGGBB\t#{0}{1}{2}{4}#RRGGBBAA\t#{0}{1}{2}{3}", color.R.ToString("X2"), color.G.ToString("X2"), color.B.ToString("X2"), color.A.ToString("X2"), Environment.NewLine);
-        }
-
-        private void updateRGBText(Color color)
-        {
-            rgbBox.Text = String.Format("RGB()\tRGB({0}, {1}, {2}){4}RGBA()\tRGBA({0}, {1}, {2}, {3}){4}ARGB()\tARGB({3}, {0}, {1}, {2})", color.R.ToString(), color.G.ToString(), color.B.ToString(), color.A.ToString(), Environment.NewLine);
-        }
-
-        private void updateHslText(Color color)
-        {
-
-        }
         private void Button1_Click(object sender, EventArgs e)
         {
-  
-            MatchCollection matches = allSupportedRegex.Matches(colorInputBox.Text);
+            TestRegex(colorInputBox.Text);
+        }
+
+        /** Private methods here **/
+        private void ShowWindowAgain()
+        {
+            //CheckClipBoard();
+
+            Show();
+            this.WindowState = FormWindowState.Normal;
+            notifyIcon1.Visible = false;
+        }
+        private void CheckClipBoard()
+        {
+            String clipboard;
+            /* Try to read from clipboard and use that to check if it's a color */
+            if (Clipboard.ContainsText())
+            {
+                clipboard = Clipboard.GetText();
+                if (allSupportedRegex.IsMatch(clipboard))
+                {
+                    colorInputBox.Text = clipboard;
+                    TestRegex(clipboard);
+                }
+            }
+            
+        }
+
+        private void TestRegex(String enteredString)
+        {
+            MatchCollection matches = allSupportedRegex.Matches(enteredString);
             if (matches.Count > 0)
             {
+                int red = 0, green = 0, blue = 0;
+                decimal alpha = 0;
+
+                /* I only really care about the first Full match */
                 Match match = matches[0];
-                if (match.Groups[1].Value == "#" || match.Groups[1].Value == "HEX")
+                String colorSystem = match.Groups[1].Value.ToLowerInvariant();
+
+                if (colorSystem == "#" || colorSystem == "hex")
                 {
                     /* The user entered a color using either # or HEX(). ColorTranslator supports hex right out of the box so I don't need to convert it. I know that groups 7, 8, 9 are the ones that captured the parameters so let's use them */
-                    Color convertedColor = System.Drawing.ColorTranslator.FromHtml("#" + match.Groups[7] + match.Groups[8] + match.Groups[9]);
-                    changeColorBox(convertedColor);
-                    updateColorTexts(convertedColor);
+                    //convertedColor = System.Drawing.ColorTranslator.FromHtml("#" + match.Groups[2] + match.Groups[3] + match.Groups[4]);
+                    red = Convert.ToInt32(match.Groups[2].Value, 16);
+                    green = Convert.ToInt32(match.Groups[3].Value, 16);
+                    blue = Convert.ToInt32(match.Groups[4].Value, 16);
                 }
-                else if (match.Groups[1].Value == "RGB")
+                else if (colorSystem == "rgb" || colorSystem == "rgba")
                 {
                     /* The user entered a color using RGB, let's create a color using Color.FromArgb but set alpha as 255 */
-                    int red = int.Parse(match.Groups[7].Value);
-                    int green = int.Parse(match.Groups[8].Value);
-                    int blue = int.Parse(match.Groups[9].Value);
+                    if(match.Groups[2].Value.EndsWith("%"))
+                    {
+                        red = 255 * (int.Parse(match.Groups[2].Value.Replace("%", "")) / 100);
+                    }
+                    else
+                    {
+                        red = int.Parse(match.Groups[2].Value);
+                    }
 
-                    Color convertedColor = Color.FromArgb(255, red, green, blue);
-                    changeColorBox(convertedColor);
-                    updateColorTexts(convertedColor);
+                    if (match.Groups[3].Value.EndsWith("%"))
+                    {
+                        green = 255 * (int.Parse(match.Groups[3].Value.Replace("%", "")) / 100);
+                    }
+                    else
+                    {
+                        green = int.Parse(match.Groups[3].Value);
+                    }
+
+                    if (match.Groups[4].Value.EndsWith("%"))
+                    {
+                        blue = 255 * (int.Parse(match.Groups[4].Value.Replace("%", "")) / 100);
+                    }
+                    else
+                    {
+                        blue = int.Parse(match.Groups[4].Value);
+                    }
                 }
-                else if (match.Groups[1].Value == "RGBA")
+                else if (colorSystem == "hsl" || colorSystem == "hsla")
                 {
-                    int red = int.Parse(match.Groups[7].Value);
-                    int green = int.Parse(match.Groups[8].Value);
-                    int blue = int.Parse(match.Groups[9].Value);
-                    decimal alpha = decimal.Parse(match.Groups[10].Value.Replace(".", ","));
+                    float hue = float.Parse(match.Groups[2].Value);
+                    float saturation = float.Parse(match.Groups[3].Value) / 100;
+                    float lightness = float.Parse(match.Groups[4].Value) / 100;
 
-                    Color convertedColor = Color.FromArgb((int)(alpha * 255), red, green, blue);
-                    changeColorBox(convertedColor);
-                    updateColorTexts(convertedColor);
+                    float hslred = 0,
+                        hslgreen = 0,
+                        hslblue = 0;
+
+                    /* I found this code online in a post for converting between color systems. */
+                    float chroma = (1 - Math.Abs(2 * lightness - 1)) * saturation,
+                        second = chroma * (1 - Math.Abs((hue / 60) % 2 - 1)),
+                        matchlight = lightness - chroma / 2;
+                    if (0 <= hue && hue < 60)
+                    {
+                        hslred = chroma;
+                        hslgreen = second;
+                        hslblue = 0;
+                    }
+                    else if(60 <= hue && hue < 120)
+                    {
+                        hslred = second;
+                        hslgreen = chroma;
+                        hslblue = 0;
+                    }
+                    else if(120 <= hue && hue < 180)
+                    {
+                        hslred = 0;
+                        hslgreen = chroma;
+                        hslblue = second;
+                    }
+                    else if(180 <= hue && hue < 240)
+                    {
+                        hslred = 0;
+                        hslgreen = second;
+                        hslblue = chroma;
+                    }
+                    else if(240 <= hue && hue < 300)
+                    {
+                        hslred = second;
+                        hslgreen = 0;
+                        hslblue = chroma;
+                    }
+                    else if(300 <= hue && hue < 360)
+                    {
+                        hslred = chroma;
+                        hslgreen = 0;
+                        hslblue = second;
+                    }
+                    red = (int)Math.Round((hslred + matchlight) * 255.0f);
+                    green = (int)Math.Round((hslgreen + matchlight) * 255.0f);
+                    blue = (int)Math.Round((hslblue + matchlight) * 255.0f);
+
                 }
+                if(colorSystem == "rgba" || colorSystem == "hsla")
+                {
+                    if (match.Groups[5].Value.EndsWith("%"))
+                    {
+                        alpha = 255 * (decimal.Parse(match.Groups[5].Value) / 100);
+                    }
+                    else if (match.Groups[5].Value.Contains(".") || match.Groups[5].Value.Contains(","))
+                    {
+                        alpha = 255 * (decimal.Parse(match.Groups[5].Value.Replace(".", ",")));
+                    }
+                    else
+                    {
+                        alpha = (decimal.Parse(match.Groups[5].Value));
+                    }
+                }
+                else
+                {
+                    alpha = 255.0M;
+                }
+
+
+                Color convertedColor = Color.FromArgb((int)alpha, red, green, blue);
+
+                ChangeColorBox(convertedColor);
+                UpdateColorTexts(convertedColor);
             }
             else
             {
                 /* There was no match for the string provided - let the user know this. */
             }
+        }
+
+        private void ChangeColorBox(Color color)
+        {
+            inputColor = color;
+            this.Refresh();
+        }
+
+        private void UpdateColorTexts(Color color)
+        {
+            UpdateHexText(color);
+            UpdateRGBText(color);
+            updateHslText(color);
+        }
+
+        private void UpdateHexText(Color color)
+        {
+            String red = color.R.ToString("X2");
+            String green = color.G.ToString("X2");
+            String blue = color.B.ToString("X2");
+            String alpha = color.A.ToString("X2");
+
+            hexBox.Text = "";
+            hexBox.AppendText(String.Format("#RRGGBB\t#{0}{1}{2}", red, green, blue));
+            hexBox.AppendText(String.Format("{0}{0}", Environment.NewLine));
+            hexBox.AppendText(String.Format("#RRGGBBAA\t#{0}{1}{2}{3}", red, green, blue, alpha));
+        }
+
+        private void UpdateRGBText(Color color)
+        {
+            int red = color.R;
+            int green = color.G;
+            int blue = color.B;
+            decimal alpha = Math.Round(Convert.ToDecimal(color.A / 255M), 1);
+
+            int redpercentage = (color.R / 255 * 100);
+            int greenpercentage = (color.G / 255 * 100);
+            int bluepercentage = (color.B / 255 * 100);
+            int alphapercentage = (color.A / 255 * 100);
+
+            rgbBox.Text = "";
+            rgbBox.AppendText(String.Format("RGB({0}, {1}, {2})", red, green, blue));
+            rgbBox.AppendText(String.Format("{0}", Environment.NewLine));
+            rgbBox.AppendText(String.Format("RGB({0}%, {1}%, {2}%)", redpercentage, greenpercentage, bluepercentage));
+            rgbBox.AppendText(String.Format("{0}{0}", Environment.NewLine));
+            rgbBox.AppendText(String.Format("RGBA({0}, {1}, {2}, {3}){5}RGBA({0}, {1}, {2}, {4})", red, green, blue, color.A, alpha, Environment.NewLine));
+            rgbBox.AppendText(String.Format("{0}{0}", Environment.NewLine));
+            rgbBox.AppendText(String.Format("RGBA({0}%, {1}%, {2}%, {3}%){5}RGBA({0}%, {1}%, {2}%, {4})", redpercentage, greenpercentage, bluepercentage, alphapercentage, alpha, Environment.NewLine));
+            rgbBox.AppendText(String.Format("{0}{0}", Environment.NewLine));
+            rgbBox.AppendText(String.Format("ARGB({3}, {0}, {1}, {2}){5}ARGB({4}, {0}, {1}, {2})", red, green, blue, color.A, alpha, Environment.NewLine));
+            rgbBox.AppendText(String.Format("{0}{0}", Environment.NewLine));
+            rgbBox.AppendText(String.Format("ARGB({3}%, {0}%, {1}%, {2}%){5}ARGB({4}, {0}%, {1}%, {2})", redpercentage, greenpercentage, bluepercentage, alphapercentage, alpha, Environment.NewLine));
+
+        }
+
+        private void updateHslText(Color color)
+        {
+            /* Wait, Color has HSL/HSB values? I don't need to calculate them myself then */
+            int hue = (int)color.GetHue();
+            int saturation = (int)(color.GetSaturation() * 100);
+            int lightness = (int)(color.GetBrightness() * 100);
+            decimal alpha = Math.Round(Convert.ToDecimal(color.A / 255M), 1);
+
+            hslBox.Text = "";
+            hslBox.AppendText(String.Format("HSL({0}, {1}, {2})", hue, saturation, lightness));
+            hslBox.AppendText(String.Format("{0}", Environment.NewLine));
+            hslBox.AppendText(String.Format("HSL({0}, {1}%, {2}%)", hue, saturation, lightness));
+            hslBox.AppendText(String.Format("{0}", Environment.NewLine));
+            hslBox.AppendText(String.Format("HSL({0}°, {1}%, {2}%)", hue, saturation, lightness));
+            hslBox.AppendText(String.Format("{0}{0}", Environment.NewLine));
+            hslBox.AppendText(String.Format("HSLA({0}, {1}, {2}, {3})", hue, saturation, lightness, alpha));
+            hslBox.AppendText(String.Format("{0}", Environment.NewLine));
+            hslBox.AppendText(String.Format("HSLA({0}, {1}%, {2}%, {3})", hue, saturation, lightness, alpha));
+            hslBox.AppendText(String.Format("{0}", Environment.NewLine));
+            hslBox.AppendText(String.Format("HSLA({0}°, {1}%, {2}%, {3})", hue, saturation, lightness, alpha));
         }
     }
 }

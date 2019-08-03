@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.colorInputBox = new System.Windows.Forms.TextBox();
             this.introLabel = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
@@ -36,9 +37,10 @@
             this.subIntroLabel = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.checkerboardPictureBox = new System.Windows.Forms.PictureBox();
-            this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.bindingSource2 = new System.Windows.Forms.BindingSource(this.components);
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.hexBox = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -48,8 +50,7 @@
             this.groupColorInput.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.checkerboardPictureBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSource2)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -127,24 +128,49 @@
             this.checkerboardPictureBox.Image = global::ColorConverter.Properties.Resources.checkerboard;
             this.checkerboardPictureBox.ImageLocation = "";
             this.checkerboardPictureBox.InitialImage = null;
-            this.checkerboardPictureBox.Location = new System.Drawing.Point(0, 0);
+            this.checkerboardPictureBox.Location = new System.Drawing.Point(2, 2);
             this.checkerboardPictureBox.Margin = new System.Windows.Forms.Padding(0);
             this.checkerboardPictureBox.Name = "checkerboardPictureBox";
-            this.checkerboardPictureBox.Size = new System.Drawing.Size(800, 200);
+            this.checkerboardPictureBox.Size = new System.Drawing.Size(780, 195);
             this.checkerboardPictureBox.TabIndex = 5;
             this.checkerboardPictureBox.TabStop = false;
+            this.checkerboardPictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.CheckerboardPictureBox_Paint);
             // 
             // notifyIcon1
             // 
-            this.notifyIcon1.Text = "notifyIcon1";
-            this.notifyIcon1.Visible = true;
+            this.notifyIcon1.ContextMenuStrip = this.contextMenuStrip1;
+            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
+            this.notifyIcon1.Text = "Colorconverter - Ready to convert!";
+            this.notifyIcon1.Click += new System.EventHandler(this.NotifyIcon1_Click);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openToolStripMenuItem,
+            this.quitToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(104, 48);
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
+            // 
+            // quitToolStripMenuItem
+            // 
+            this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.quitToolStripMenuItem.Text = "Quit";
+            this.quitToolStripMenuItem.Click += new System.EventHandler(this.QuitToolStripMenuItem_Click);
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.hexBox);
             this.groupBox1.Location = new System.Drawing.Point(12, 203);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(250, 200);
+            this.groupBox1.Size = new System.Drawing.Size(250, 81);
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Hex";
@@ -158,15 +184,15 @@
             this.hexBox.Multiline = true;
             this.hexBox.Name = "hexBox";
             this.hexBox.ReadOnly = true;
-            this.hexBox.Size = new System.Drawing.Size(233, 160);
+            this.hexBox.Size = new System.Drawing.Size(233, 55);
             this.hexBox.TabIndex = 0;
             // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.rgbBox);
-            this.groupBox2.Location = new System.Drawing.Point(268, 203);
+            this.groupBox2.Location = new System.Drawing.Point(12, 290);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(250, 200);
+            this.groupBox2.Size = new System.Drawing.Size(250, 259);
             this.groupBox2.TabIndex = 8;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "RGB";
@@ -180,13 +206,13 @@
             this.rgbBox.Multiline = true;
             this.rgbBox.Name = "rgbBox";
             this.rgbBox.ReadOnly = true;
-            this.rgbBox.Size = new System.Drawing.Size(233, 160);
+            this.rgbBox.Size = new System.Drawing.Size(233, 233);
             this.rgbBox.TabIndex = 0;
             // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.hslBox);
-            this.groupBox3.Location = new System.Drawing.Point(524, 203);
+            this.groupBox3.Location = new System.Drawing.Point(268, 203);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(250, 200);
             this.groupBox3.TabIndex = 9;
@@ -204,28 +230,33 @@
             this.hslBox.ReadOnly = true;
             this.hslBox.Size = new System.Drawing.Size(233, 160);
             this.hslBox.TabIndex = 0;
-            this.hslBox.Text = "Coming soon!";
             // 
             // Form1
             // 
             this.AcceptButton = this.button1;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(784, 561);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.checkerboardPictureBox);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "Colorconverter";
+            this.Activated += new System.EventHandler(this.Form1_GotFocus);
+            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Resize += new System.EventHandler(this.Form1_Resize);
             this.groupColorInput.ResumeLayout(false);
             this.groupColorInput.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.checkerboardPictureBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSource2)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -240,8 +271,6 @@
 
         private System.Windows.Forms.TextBox colorInputBox;
         private System.Windows.Forms.Label introLabel;
-        private System.Windows.Forms.BindingSource bindingSource1;
-        private System.Windows.Forms.BindingSource bindingSource2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Panel groupColorInput;
         private System.Windows.Forms.Label subIntroLabel;
@@ -254,6 +283,9 @@
         private System.Windows.Forms.TextBox rgbBox;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TextBox hslBox;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
     }
 }
 
