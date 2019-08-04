@@ -53,6 +53,15 @@
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.compTextBox1 = new System.Windows.Forms.TextBox();
             this.compPictureBox1 = new System.Windows.Forms.PictureBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.analogousTextBox4 = new System.Windows.Forms.TextBox();
+            this.analogousPictureBox4 = new System.Windows.Forms.PictureBox();
+            this.analogousTextBox3 = new System.Windows.Forms.TextBox();
+            this.analogousPictureBox3 = new System.Windows.Forms.PictureBox();
+            this.analogousTextBox2 = new System.Windows.Forms.TextBox();
+            this.analogousPictureBox2 = new System.Windows.Forms.PictureBox();
+            this.analogousTextBox1 = new System.Windows.Forms.TextBox();
+            this.analogousPictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupColorInput.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.checkerboardPictureBox)).BeginInit();
@@ -64,6 +73,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.websafePictureBox)).BeginInit();
             this.groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.compPictureBox1)).BeginInit();
+            this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.analogousPictureBox4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.analogousPictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.analogousPictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.analogousPictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // colorInputBox
@@ -254,11 +268,13 @@
             // 
             // websafePictureBox
             // 
+            this.websafePictureBox.Cursor = System.Windows.Forms.Cursors.Hand;
             this.websafePictureBox.Location = new System.Drawing.Point(7, 20);
             this.websafePictureBox.Name = "websafePictureBox";
             this.websafePictureBox.Size = new System.Drawing.Size(234, 81);
             this.websafePictureBox.TabIndex = 1;
             this.websafePictureBox.TabStop = false;
+            this.websafePictureBox.Click += new System.EventHandler(this.WebsafePictureBox_Click);
             this.websafePictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.WebsafePictureBox_Paint);
             // 
             // websafeBox
@@ -277,9 +293,9 @@
             // 
             this.groupBox5.Controls.Add(this.compTextBox1);
             this.groupBox5.Controls.Add(this.compPictureBox1);
-            this.groupBox5.Location = new System.Drawing.Point(525, 410);
+            this.groupBox5.Location = new System.Drawing.Point(603, 410);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(247, 139);
+            this.groupBox5.Size = new System.Drawing.Size(169, 139);
             this.groupBox5.TabIndex = 11;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Complementary";
@@ -288,21 +304,128 @@
             // 
             this.compTextBox1.BackColor = System.Drawing.SystemColors.Control;
             this.compTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.compTextBox1.Location = new System.Drawing.Point(6, 77);
+            this.compTextBox1.Location = new System.Drawing.Point(6, 97);
             this.compTextBox1.Multiline = true;
             this.compTextBox1.Name = "compTextBox1";
             this.compTextBox1.ReadOnly = true;
-            this.compTextBox1.Size = new System.Drawing.Size(235, 56);
+            this.compTextBox1.Size = new System.Drawing.Size(157, 36);
             this.compTextBox1.TabIndex = 1;
             // 
             // compPictureBox1
             // 
+            this.compPictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.compPictureBox1.Location = new System.Drawing.Point(6, 19);
             this.compPictureBox1.Name = "compPictureBox1";
-            this.compPictureBox1.Size = new System.Drawing.Size(235, 50);
+            this.compPictureBox1.Size = new System.Drawing.Size(157, 70);
             this.compPictureBox1.TabIndex = 0;
             this.compPictureBox1.TabStop = false;
+            this.compPictureBox1.Click += new System.EventHandler(this.CompPictureBox1_Click);
             this.compPictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.CompPictureBox1_Paint);
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.analogousTextBox4);
+            this.groupBox6.Controls.Add(this.analogousPictureBox4);
+            this.groupBox6.Controls.Add(this.analogousTextBox3);
+            this.groupBox6.Controls.Add(this.analogousPictureBox3);
+            this.groupBox6.Controls.Add(this.analogousTextBox2);
+            this.groupBox6.Controls.Add(this.analogousPictureBox2);
+            this.groupBox6.Controls.Add(this.analogousTextBox1);
+            this.groupBox6.Controls.Add(this.analogousPictureBox1);
+            this.groupBox6.Location = new System.Drawing.Point(268, 410);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(329, 139);
+            this.groupBox6.TabIndex = 12;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Analogous color harmony";
+            // 
+            // analogousTextBox4
+            // 
+            this.analogousTextBox4.BackColor = System.Drawing.SystemColors.Control;
+            this.analogousTextBox4.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.analogousTextBox4.Location = new System.Drawing.Point(244, 97);
+            this.analogousTextBox4.Multiline = true;
+            this.analogousTextBox4.Name = "analogousTextBox4";
+            this.analogousTextBox4.ReadOnly = true;
+            this.analogousTextBox4.Size = new System.Drawing.Size(70, 30);
+            this.analogousTextBox4.TabIndex = 7;
+            // 
+            // analogousPictureBox4
+            // 
+            this.analogousPictureBox4.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.analogousPictureBox4.Location = new System.Drawing.Point(244, 19);
+            this.analogousPictureBox4.Name = "analogousPictureBox4";
+            this.analogousPictureBox4.Size = new System.Drawing.Size(70, 70);
+            this.analogousPictureBox4.TabIndex = 6;
+            this.analogousPictureBox4.TabStop = false;
+            this.analogousPictureBox4.Click += new System.EventHandler(this.AnalogousPictureBox4_Click);
+            this.analogousPictureBox4.Paint += new System.Windows.Forms.PaintEventHandler(this.AnalogousPictureBox4_Paint);
+            // 
+            // analogousTextBox3
+            // 
+            this.analogousTextBox3.BackColor = System.Drawing.SystemColors.Control;
+            this.analogousTextBox3.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.analogousTextBox3.Location = new System.Drawing.Point(168, 97);
+            this.analogousTextBox3.Multiline = true;
+            this.analogousTextBox3.Name = "analogousTextBox3";
+            this.analogousTextBox3.ReadOnly = true;
+            this.analogousTextBox3.Size = new System.Drawing.Size(70, 30);
+            this.analogousTextBox3.TabIndex = 5;
+            // 
+            // analogousPictureBox3
+            // 
+            this.analogousPictureBox3.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.analogousPictureBox3.Location = new System.Drawing.Point(168, 19);
+            this.analogousPictureBox3.Name = "analogousPictureBox3";
+            this.analogousPictureBox3.Size = new System.Drawing.Size(70, 70);
+            this.analogousPictureBox3.TabIndex = 4;
+            this.analogousPictureBox3.TabStop = false;
+            this.analogousPictureBox3.Click += new System.EventHandler(this.AnalogousPictureBox3_Click);
+            this.analogousPictureBox3.Paint += new System.Windows.Forms.PaintEventHandler(this.AnalogousPictureBox3_Paint);
+            // 
+            // analogousTextBox2
+            // 
+            this.analogousTextBox2.BackColor = System.Drawing.SystemColors.Control;
+            this.analogousTextBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.analogousTextBox2.Location = new System.Drawing.Point(92, 97);
+            this.analogousTextBox2.Multiline = true;
+            this.analogousTextBox2.Name = "analogousTextBox2";
+            this.analogousTextBox2.ReadOnly = true;
+            this.analogousTextBox2.Size = new System.Drawing.Size(70, 30);
+            this.analogousTextBox2.TabIndex = 3;
+            // 
+            // analogousPictureBox2
+            // 
+            this.analogousPictureBox2.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.analogousPictureBox2.Location = new System.Drawing.Point(92, 19);
+            this.analogousPictureBox2.Name = "analogousPictureBox2";
+            this.analogousPictureBox2.Size = new System.Drawing.Size(70, 70);
+            this.analogousPictureBox2.TabIndex = 2;
+            this.analogousPictureBox2.TabStop = false;
+            this.analogousPictureBox2.Click += new System.EventHandler(this.AnalogousPictureBox2_Click);
+            this.analogousPictureBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.AnalogousPictureBox2_Paint);
+            // 
+            // analogousTextBox1
+            // 
+            this.analogousTextBox1.BackColor = System.Drawing.SystemColors.Control;
+            this.analogousTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.analogousTextBox1.Location = new System.Drawing.Point(16, 99);
+            this.analogousTextBox1.Multiline = true;
+            this.analogousTextBox1.Name = "analogousTextBox1";
+            this.analogousTextBox1.ReadOnly = true;
+            this.analogousTextBox1.Size = new System.Drawing.Size(70, 30);
+            this.analogousTextBox1.TabIndex = 1;
+            // 
+            // analogousPictureBox1
+            // 
+            this.analogousPictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.analogousPictureBox1.Location = new System.Drawing.Point(16, 19);
+            this.analogousPictureBox1.Name = "analogousPictureBox1";
+            this.analogousPictureBox1.Size = new System.Drawing.Size(70, 70);
+            this.analogousPictureBox1.TabIndex = 0;
+            this.analogousPictureBox1.TabStop = false;
+            this.analogousPictureBox1.Click += new System.EventHandler(this.AnalogousPictureBox1_Click);
+            this.analogousPictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.AnalogousPictureBox1_Paint);
             // 
             // Form1
             // 
@@ -311,6 +434,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupbox4);
             this.Controls.Add(this.groupBox3);
@@ -344,6 +468,12 @@
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.compPictureBox1)).EndInit();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.analogousPictureBox4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.analogousPictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.analogousPictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.analogousPictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -373,6 +503,15 @@
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.TextBox compTextBox1;
         private System.Windows.Forms.PictureBox compPictureBox1;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.TextBox analogousTextBox3;
+        private System.Windows.Forms.PictureBox analogousPictureBox3;
+        private System.Windows.Forms.TextBox analogousTextBox2;
+        private System.Windows.Forms.PictureBox analogousPictureBox2;
+        private System.Windows.Forms.TextBox analogousTextBox1;
+        private System.Windows.Forms.PictureBox analogousPictureBox1;
+        private System.Windows.Forms.TextBox analogousTextBox4;
+        private System.Windows.Forms.PictureBox analogousPictureBox4;
     }
 }
 

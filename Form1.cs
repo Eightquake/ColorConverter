@@ -17,26 +17,26 @@ namespace ColorConverter
         private Color inputColor;
         private Color createdwebsafeColor;
         private Color createdComplementColor;
+        private Color[] createdHarmonyColors;
         private static Regex allSupportedRegex;
 
         public Form1()
         {
             InitializeComponent();
         }
-        /** Form events here **/
+        #region Windows Form method for events
         private void Form1_Load(object sender, EventArgs e)
         {
             /* Form1_Load does not happen when this.refresh() is called in changeColorBox - that's a good thing as this only needs to be run once */
 
             /* Well, this RegEx took a while to find out. It captures any supported color system in the first group, and then the parameters in seperate groups. Optionally, for color systems with alpha channel, it captures the fractional as a parameter */
             allSupportedRegex = new Regex(@"(^((?:(?:#)|(?:HEX)|(?:HEXA)))[\(\s]{0,2}([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})[\)\s]{0,2}$)|(^((?:(?:RGBA)|(?:RGB)|(?:HSL)|(?:HSLA)))[\(\s]{0,2}(\d+%?)[,\s]{0,2}(\d+%?)[,\s]{0,2}(\d+%?)[,\s]{0,2}(0?[\.\,]?\d*)?[\)\s]{0,2}?$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        }
 
+            createdHarmonyColors = new Color[] { new Color(), new Color(), new Color(), new Color()};
+        }
         private void Form1_Resize(object sender, EventArgs e)
         {
-            //if the form is minimized  
-            //hide it from the task bar  
-            //and show the system tray icon (represented by the NotifyIcon control)  
+            /* If the Form is minimzed, hide it and show the notification icon */
             if (this.WindowState == FormWindowState.Minimized)
             {
                 Hide();
@@ -45,6 +45,7 @@ namespace ColorConverter
         }
         private void Form1_GotFocus(object sender, EventArgs e)
         {
+            /* Whenever the Form gets focused, check the clipboard if it contains a color */
             CheckClipBoard();
         }
         private void NotifyIcon1_MouseDown(object sender, MouseEventArgs e)
@@ -54,17 +55,14 @@ namespace ColorConverter
                 ShowWindowAgain();
             }
         }
-
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowWindowAgain();
         }
-
         private void QuitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
-
         private void CheckerboardPictureBox_Paint(object sender, PaintEventArgs e)
         {
             SolidBrush brush = new SolidBrush(inputColor);
@@ -73,7 +71,6 @@ namespace ColorConverter
             graphics.FillRectangle(brush, new Rectangle(0, 0, 800, 200));
             brush.Dispose();
         }
-
         private void WebsafePictureBox_Paint(object sender, PaintEventArgs e)
         {
             SolidBrush brush = new SolidBrush(createdwebsafeColor);
@@ -82,21 +79,109 @@ namespace ColorConverter
             graphics.FillRectangle(brush, new Rectangle(0, 0, 235, 82));
             brush.Dispose();
         }
-
         private void CompPictureBox1_Paint(object sender, PaintEventArgs e)
         {
             SolidBrush brush = new SolidBrush(createdComplementColor);
             Graphics graphics = e.Graphics;
 
-            graphics.FillRectangle(brush, new Rectangle(0, 0, 100, 50));
+            graphics.FillRectangle(brush, new Rectangle(0, 0, 157, 70));
             brush.Dispose();
+        }
+        private void AnalogousPictureBox1_Paint(object sender, PaintEventArgs e)
+        {
+            if (!createdHarmonyColors[0].IsEmpty)
+            {
+                SolidBrush brush = new SolidBrush(createdHarmonyColors[0]);
+                Graphics graphics = e.Graphics;
+
+                graphics.FillRectangle(brush, new Rectangle(0, 0, 70, 70));
+                brush.Dispose();
+            }
+        }
+        private void AnalogousPictureBox2_Paint(object sender, PaintEventArgs e)
+        {
+            if (!createdHarmonyColors[1].IsEmpty)
+            {
+                SolidBrush brush = new SolidBrush(createdHarmonyColors[1]);
+                Graphics graphics = e.Graphics;
+
+                graphics.FillRectangle(brush, new Rectangle(0, 0, 70, 70));
+                brush.Dispose();
+            }
+        }
+        private void AnalogousPictureBox3_Paint(object sender, PaintEventArgs e)
+        {
+            if (!createdHarmonyColors[2].IsEmpty)
+            {
+                SolidBrush brush = new SolidBrush(createdHarmonyColors[2]);
+                Graphics graphics = e.Graphics;
+
+                graphics.FillRectangle(brush, new Rectangle(0, 0, 70, 70));
+                brush.Dispose();
+            }
+        }
+        private void AnalogousPictureBox4_Paint(object sender, PaintEventArgs e)
+        {
+            if (!createdHarmonyColors[3].IsEmpty)
+            {
+                SolidBrush brush = new SolidBrush(createdHarmonyColors[3]);
+                Graphics graphics = e.Graphics;
+
+                graphics.FillRectangle(brush, new Rectangle(0, 0, 70, 70));
+                brush.Dispose();
+            }
         }
         private void Button1_Click(object sender, EventArgs e)
         {
             TestRegex(colorInputBox.Text);
         }
+        private void WebsafePictureBox_Click(object sender, EventArgs e)
+        {
+            colorInputBox.Text = "#" + createdwebsafeColor.Name.Remove(0, 2).ToUpper();
+            TestRegex(colorInputBox.Text);
+        }
 
-        /** Private methods here **/
+        private void CompPictureBox1_Click(object sender, EventArgs e)
+        {
+            colorInputBox.Text = "#" + createdComplementColor.Name.Remove(0, 2).ToUpper();
+            TestRegex(colorInputBox.Text);
+        }
+
+        private void AnalogousPictureBox1_Click(object sender, EventArgs e)
+        {
+            /* If the colors name is 0 it means the color is out of reach for the color harmony */
+            if (createdHarmonyColors[0].Name != "0")
+            {
+                colorInputBox.Text = "#" + createdHarmonyColors[0].Name.Remove(0, 2).ToUpper();
+                TestRegex(colorInputBox.Text);
+            }
+        }
+        private void AnalogousPictureBox2_Click(object sender, EventArgs e)
+        {
+            if (createdHarmonyColors[1].Name != "0")
+            {
+                colorInputBox.Text = "#" + createdHarmonyColors[1].Name.Remove(0, 2).ToUpper();
+                TestRegex(colorInputBox.Text);
+            }
+        }
+        private void AnalogousPictureBox3_Click(object sender, EventArgs e)
+        {
+            if (createdHarmonyColors[2].Name != "0")
+            {
+                colorInputBox.Text = "#" + createdHarmonyColors[2].Name.Remove(0, 2).ToUpper();
+                TestRegex(colorInputBox.Text);
+            }
+        }
+        private void AnalogousPictureBox4_Click(object sender, EventArgs e)
+        {
+            if (createdHarmonyColors[3].Name != "0")
+            {
+                colorInputBox.Text = "#" + createdHarmonyColors[3].Name.Remove(0, 2).ToUpper();
+                TestRegex(colorInputBox.Text);
+            }
+        }
+        #endregion
+        #region My methods
         private void ShowWindowAgain()
         {
             Show();
@@ -118,7 +203,6 @@ namespace ColorConverter
             }
             
         }
-
         private void TestRegex(String enteredString)
         {
             MatchCollection matches = allSupportedRegex.Matches(enteredString);
@@ -221,7 +305,6 @@ namespace ColorConverter
                 /* There was no match for the string provided - let the user know this. */
             }
         }
-
         private Color CreateColorFromHsl(float hue, float saturation, float lightness)
         {
             float hslred = 0,
@@ -271,8 +354,16 @@ namespace ColorConverter
             int red = (int)Math.Round((hslred + matchlight) * 255.0f),
                 green = (int)Math.Round((hslgreen + matchlight) * 255.0f),
                 blue = (int)Math.Round((hslblue + matchlight) * 255.0f);
-
-            return Color.FromArgb(red, green, blue);
+            try
+            {
+                return Color.FromArgb(red, green, blue);
+            }
+            catch(ArgumentException e)
+            {
+                /* The rgb values were out of range. This probably means the user entered a really dark or really light color and the color harmony now tried to create a color that doesn't exists */
+                /* Let's default to a transparent black if this happens */
+                return Color.FromArgb(0, 0, 0, 0);
+            }
         }
         private Color createWebsafeFromRgb(int red, int green, int blue)
         {
@@ -310,19 +401,17 @@ namespace ColorConverter
 
             return Color.FromArgb(red, green, blue);
         }
-
-        private void UpdateAllColors(Color color, Color websafeColor)
-        {
-            UpdateColorTexts(color, websafeColor);
-            ChangeColorBox(color, websafeColor);
-        }
-
-        private void ChangeColorBox(Color color, Color websafeColor)
+        private void ChangeColorBox(Color color)
         {
             inputColor = color;
             this.Refresh();
         }
-
+        #region Methods for updating all of the textboxes with the correct color
+        private void UpdateAllColors(Color color, Color websafeColor)
+        {
+            UpdateColorTexts(color, websafeColor);
+            ChangeColorBox(color);
+        }
         private void UpdateColorTexts(Color color, Color websafeColor)
         {
             UpdateHexText(color);
@@ -330,8 +419,8 @@ namespace ColorConverter
             UpdateHslText(color);
             UpdateWebsafeColor(websafeColor);
             UpdateComplementaryText(color);
+            UpdateColorHarmonyText(color);
         }
-
         private void UpdateHexText(Color color)
         {
             String red = color.R.ToString("X2");
@@ -344,7 +433,6 @@ namespace ColorConverter
             hexBox.AppendText(String.Format("{0}{0}", Environment.NewLine));
             hexBox.AppendText(String.Format("#RRGGBBAA\t#{0}{1}{2}{3}", red, green, blue, alpha));
         }
-
         private void UpdateRGBText(Color color)
         {
             int red = color.R;
@@ -371,7 +459,6 @@ namespace ColorConverter
             rgbBox.AppendText(String.Format("ARGB({3}%, {0}%, {1}%, {2}%){5}ARGB({4}, {0}%, {1}%, {2})", redpercentage, greenpercentage, bluepercentage, alphapercentage, alpha, Environment.NewLine));
 
         }
-
         private void UpdateHslText(Color color)
         {
             /* Wait, Color has HSL/HSB values? I don't need to calculate them myself then */
@@ -399,7 +486,7 @@ namespace ColorConverter
             createdwebsafeColor = color;
 
             websafeBox.AppendText(String.Format("#{0}{1}{2}", color.R.ToString("X2"), color.G.ToString("X2"), color.B.ToString("X2")));
-            websafeBox.AppendText(String.Format("{0}", Environment.NewLine));
+            websafeBox.AppendText(String.Format("{0}{0}", Environment.NewLine));
             websafeBox.AppendText(String.Format("RGB({0}, {1}, {2})", color.R, color.G, color.B));
         }
         private void UpdateComplementaryText(Color color)
@@ -412,9 +499,25 @@ namespace ColorConverter
             createdComplementColor = compColor;
 
             compTextBox1.AppendText(String.Format("#{0}{1}{2}", compColor.R.ToString("X2"), compColor.G.ToString("X2"), compColor.B.ToString("X2")));
-            compTextBox1.AppendText(String.Format("{0}", Environment.NewLine));
-            compTextBox1.AppendText(String.Format("RGB({0}, {1}, {2})", compColor.R, compColor.G, compColor.B));
-            
+            compTextBox1.AppendText(String.Format("{0}{0}", Environment.NewLine));
+            compTextBox1.AppendText(String.Format("RGB({0}, {1}, {2})", compColor.R, compColor.G, compColor.B));   
         }
+        private void UpdateColorHarmonyText(Color color)
+        {
+            int distance = 4;
+            Color[] colors = { CreateColorFromHsl((color.GetHue() + distance * 2) % 360.0f, color.GetSaturation(), color.GetBrightness() - 0.05f), CreateColorFromHsl((color.GetHue() + distance) % 360.0f, color.GetSaturation(), color.GetBrightness() - 0.05f), CreateColorFromHsl((color.GetHue() - distance) % 360.0f, color.GetSaturation(), color.GetBrightness()), CreateColorFromHsl((color.GetHue() - distance * 2) % 360.0f, color.GetSaturation(), color.GetBrightness()) };
+            TextBox[] textBoxes = { analogousTextBox1, analogousTextBox2, analogousTextBox3, analogousTextBox4, };
+
+            for(int i=0;i<colors.Length;i++)
+            {
+                Color thisColor = colors[i];
+                createdHarmonyColors[i] = thisColor;
+                textBoxes[i].Text = "";
+                textBoxes[i].AppendText(String.Format("#{0}{1}{2}", thisColor.R.ToString("X2"), thisColor.G.ToString("X2"), thisColor.B.ToString("X2")));
+            }
+        }
+        #endregion
+
+        #endregion
     }
 }
