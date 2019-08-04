@@ -47,6 +47,12 @@
             this.rgbBox = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.hslBox = new System.Windows.Forms.TextBox();
+            this.groupbox4 = new System.Windows.Forms.GroupBox();
+            this.websafePictureBox = new System.Windows.Forms.PictureBox();
+            this.websafeBox = new System.Windows.Forms.TextBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.compTextBox1 = new System.Windows.Forms.TextBox();
+            this.compPictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupColorInput.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.checkerboardPictureBox)).BeginInit();
@@ -54,6 +60,10 @@
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupbox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.websafePictureBox)).BeginInit();
+            this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.compPictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // colorInputBox
@@ -141,7 +151,7 @@
             this.notifyIcon1.ContextMenuStrip = this.contextMenuStrip1;
             this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
             this.notifyIcon1.Text = "Colorconverter - Ready to convert!";
-            this.notifyIcon1.Click += new System.EventHandler(this.NotifyIcon1_Click);
+            this.notifyIcon1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.NotifyIcon1_MouseDown);
             // 
             // contextMenuStrip1
             // 
@@ -184,7 +194,7 @@
             this.hexBox.Multiline = true;
             this.hexBox.Name = "hexBox";
             this.hexBox.ReadOnly = true;
-            this.hexBox.Size = new System.Drawing.Size(233, 55);
+            this.hexBox.Size = new System.Drawing.Size(237, 55);
             this.hexBox.TabIndex = 0;
             // 
             // groupBox2
@@ -206,7 +216,7 @@
             this.rgbBox.Multiline = true;
             this.rgbBox.Name = "rgbBox";
             this.rgbBox.ReadOnly = true;
-            this.rgbBox.Size = new System.Drawing.Size(233, 233);
+            this.rgbBox.Size = new System.Drawing.Size(237, 233);
             this.rgbBox.TabIndex = 0;
             // 
             // groupBox3
@@ -228,8 +238,71 @@
             this.hslBox.Multiline = true;
             this.hslBox.Name = "hslBox";
             this.hslBox.ReadOnly = true;
-            this.hslBox.Size = new System.Drawing.Size(233, 160);
+            this.hslBox.Size = new System.Drawing.Size(237, 174);
             this.hslBox.TabIndex = 0;
+            // 
+            // groupbox4
+            // 
+            this.groupbox4.Controls.Add(this.websafePictureBox);
+            this.groupbox4.Controls.Add(this.websafeBox);
+            this.groupbox4.Location = new System.Drawing.Point(525, 203);
+            this.groupbox4.Name = "groupbox4";
+            this.groupbox4.Size = new System.Drawing.Size(247, 200);
+            this.groupbox4.TabIndex = 10;
+            this.groupbox4.TabStop = false;
+            this.groupbox4.Text = "Websafe";
+            // 
+            // websafePictureBox
+            // 
+            this.websafePictureBox.Location = new System.Drawing.Point(7, 20);
+            this.websafePictureBox.Name = "websafePictureBox";
+            this.websafePictureBox.Size = new System.Drawing.Size(234, 81);
+            this.websafePictureBox.TabIndex = 1;
+            this.websafePictureBox.TabStop = false;
+            this.websafePictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.WebsafePictureBox_Paint);
+            // 
+            // websafeBox
+            // 
+            this.websafeBox.BackColor = System.Drawing.SystemColors.Control;
+            this.websafeBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.websafeBox.Location = new System.Drawing.Point(7, 107);
+            this.websafeBox.Multiline = true;
+            this.websafeBox.Name = "websafeBox";
+            this.websafeBox.ReadOnly = true;
+            this.websafeBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.websafeBox.Size = new System.Drawing.Size(234, 87);
+            this.websafeBox.TabIndex = 0;
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.compTextBox1);
+            this.groupBox5.Controls.Add(this.compPictureBox1);
+            this.groupBox5.Location = new System.Drawing.Point(525, 410);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(247, 139);
+            this.groupBox5.TabIndex = 11;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Complementary";
+            // 
+            // compTextBox1
+            // 
+            this.compTextBox1.BackColor = System.Drawing.SystemColors.Control;
+            this.compTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.compTextBox1.Location = new System.Drawing.Point(6, 77);
+            this.compTextBox1.Multiline = true;
+            this.compTextBox1.Name = "compTextBox1";
+            this.compTextBox1.ReadOnly = true;
+            this.compTextBox1.Size = new System.Drawing.Size(235, 56);
+            this.compTextBox1.TabIndex = 1;
+            // 
+            // compPictureBox1
+            // 
+            this.compPictureBox1.Location = new System.Drawing.Point(6, 19);
+            this.compPictureBox1.Name = "compPictureBox1";
+            this.compPictureBox1.Size = new System.Drawing.Size(235, 50);
+            this.compPictureBox1.TabIndex = 0;
+            this.compPictureBox1.TabStop = false;
+            this.compPictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.CompPictureBox1_Paint);
             // 
             // Form1
             // 
@@ -238,6 +311,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.groupBox5);
+            this.Controls.Add(this.groupbox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -263,6 +338,12 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupbox4.ResumeLayout(false);
+            this.groupbox4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.websafePictureBox)).EndInit();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.compPictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -286,6 +367,12 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
+        private System.Windows.Forms.GroupBox groupbox4;
+        private System.Windows.Forms.TextBox websafeBox;
+        private System.Windows.Forms.PictureBox websafePictureBox;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.TextBox compTextBox1;
+        private System.Windows.Forms.PictureBox compPictureBox1;
     }
 }
 

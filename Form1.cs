@@ -15,6 +15,8 @@ namespace ColorConverter
     public partial class Form1 : Form
     {
         private Color inputColor;
+        private Color createdwebsafeColor;
+        private Color createdComplementColor;
         private static Regex allSupportedRegex;
 
         public Form1()
@@ -45,10 +47,12 @@ namespace ColorConverter
         {
             CheckClipBoard();
         }
-
-        private void NotifyIcon1_Click(object sender, EventArgs e)
+        private void NotifyIcon1_MouseDown(object sender, MouseEventArgs e)
         {
-            ShowWindowAgain();
+            if (e.Button == MouseButtons.Left)
+            {
+                ShowWindowAgain();
+            }
         }
 
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
@@ -70,6 +74,23 @@ namespace ColorConverter
             brush.Dispose();
         }
 
+        private void WebsafePictureBox_Paint(object sender, PaintEventArgs e)
+        {
+            SolidBrush brush = new SolidBrush(createdwebsafeColor);
+            Graphics graphics = e.Graphics;
+
+            graphics.FillRectangle(brush, new Rectangle(0, 0, 235, 82));
+            brush.Dispose();
+        }
+
+        private void CompPictureBox1_Paint(object sender, PaintEventArgs e)
+        {
+            SolidBrush brush = new SolidBrush(createdComplementColor);
+            Graphics graphics = e.Graphics;
+
+            graphics.FillRectangle(brush, new Rectangle(0, 0, 100, 50));
+            brush.Dispose();
+        }
         private void Button1_Click(object sender, EventArgs e)
         {
             TestRegex(colorInputBox.Text);
@@ -78,8 +99,6 @@ namespace ColorConverter
         /** Private methods here **/
         private void ShowWindowAgain()
         {
-            //CheckClipBoard();
-
             Show();
             this.WindowState = FormWindowState.Normal;
             notifyIcon1.Visible = false;
@@ -111,6 +130,11 @@ namespace ColorConverter
                 /* I only really care about the first Full match */
                 Match match = matches[0];
                 String colorSystem = match.Groups[1].Value.ToLowerInvariant();
+                int count = 0;
+                foreach(Group group in match.Groups)
+                {
+                    Debug.WriteLine("Group: {0}  Match: {1}", count++, group);
+                }
 
                 if (colorSystem == "#" || colorSystem == "hex")
                 {
@@ -156,54 +180,10 @@ namespace ColorConverter
                     float saturation = float.Parse(match.Groups[3].Value) / 100;
                     float lightness = float.Parse(match.Groups[4].Value) / 100;
 
-                    float hslred = 0,
-                        hslgreen = 0,
-                        hslblue = 0;
-
-                    /* I found this code online in a post for converting between color systems. */
-                    float chroma = (1 - Math.Abs(2 * lightness - 1)) * saturation,
-                        second = chroma * (1 - Math.Abs((hue / 60) % 2 - 1)),
-                        matchlight = lightness - chroma / 2;
-                    if (0 <= hue && hue < 60)
-                    {
-                        hslred = chroma;
-                        hslgreen = second;
-                        hslblue = 0;
-                    }
-                    else if(60 <= hue && hue < 120)
-                    {
-                        hslred = second;
-                        hslgreen = chroma;
-                        hslblue = 0;
-                    }
-                    else if(120 <= hue && hue < 180)
-                    {
-                        hslred = 0;
-                        hslgreen = chroma;
-                        hslblue = second;
-                    }
-                    else if(180 <= hue && hue < 240)
-                    {
-                        hslred = 0;
-                        hslgreen = second;
-                        hslblue = chroma;
-                    }
-                    else if(240 <= hue && hue < 300)
-                    {
-                        hslred = second;
-                        hslgreen = 0;
-                        hslblue = chroma;
-                    }
-                    else if(300 <= hue && hue < 360)
-                    {
-                        hslred = chroma;
-                        hslgreen = 0;
-                        hslblue = second;
-                    }
-                    red = (int)Math.Round((hslred + matchlight) * 255.0f);
-                    green = (int)Math.Round((hslgreen + matchlight) * 255.0f);
-                    blue = (int)Math.Round((hslblue + matchlight) * 255.0f);
-
+                    Color hslColor = CreateColorFromHsl(hue, saturation, lightness);
+                    red = hslColor.R;
+                    green = hslColor.G;
+                    blue = hslColor.B;
                 }
                 if(colorSystem == "rgba" || colorSystem == "hsla")
                 {
@@ -227,9 +207,9 @@ namespace ColorConverter
 
 
                 Color convertedColor = Color.FromArgb((int)alpha, red, green, blue);
+                Color websafeColor = createWebsafeFromRgb(red, green, blue);
 
-                ChangeColorBox(convertedColor);
-                UpdateColorTexts(convertedColor);
+                UpdateAllColors(convertedColor, websafeColor);
             }
             else
             {
@@ -237,17 +217,114 @@ namespace ColorConverter
             }
         }
 
-        private void ChangeColorBox(Color color)
+        private Color CreateColorFromHsl(float hue, float saturation, float lightness)
+        {
+            float hslred = 0,
+                hslgreen = 0,
+                hslblue = 0;
+
+            /* I found this code online in a post for converting between color systems. */
+            float chroma = (1 - Math.Abs(2 * lightness - 1)) * saturation,
+                second = chroma * (1 - Math.Abs((hue / 60) % 2 - 1)),
+                matchlight = lightness - chroma / 2;
+            if (0 <= hue && hue < 60)
+            {
+                hslred = chroma;
+                hslgreen = second;
+                hslblue = 0;
+            }
+            else if (60 <= hue && hue < 120)
+            {
+                hslred = second;
+                hslgreen = chroma;
+                hslblue = 0;
+            }
+            else if (120 <= hue && hue < 180)
+            {
+                hslred = 0;
+                hslgreen = chroma;
+                hslblue = second;
+            }
+            else if (180 <= hue && hue < 240)
+            {
+                hslred = 0;
+                hslgreen = second;
+                hslblue = chroma;
+            }
+            else if (240 <= hue && hue < 300)
+            {
+                hslred = second;
+                hslgreen = 0;
+                hslblue = chroma;
+            }
+            else if (300 <= hue && hue < 360)
+            {
+                hslred = chroma;
+                hslgreen = 0;
+                hslblue = second;
+            }
+            int red = (int)Math.Round((hslred + matchlight) * 255.0f),
+                green = (int)Math.Round((hslgreen + matchlight) * 255.0f),
+                blue = (int)Math.Round((hslblue + matchlight) * 255.0f);
+
+            return Color.FromArgb(red, green, blue);
+        }
+        private Color createWebsafeFromRgb(int red, int green, int blue)
+        {
+            int remainder;
+            remainder = red % 51;
+            if (remainder > 25)
+            {
+                remainder = red + 51 - remainder;
+            }
+            else
+            {
+                remainder = red - remainder;
+            }
+            red = remainder;
+            remainder = green % 51;
+            if (remainder > 25)
+            {
+                remainder = green + 51 - remainder;
+            }
+            else
+            {
+                remainder = green - remainder;
+            }
+            green = remainder;
+            remainder = blue % 51;
+            if (remainder > 25)
+            {
+                remainder = blue + 51 - remainder;
+            }
+            else
+            {
+                remainder = blue - remainder;
+            }
+            blue = remainder;
+
+            return Color.FromArgb(red, green, blue);
+        }
+
+        private void UpdateAllColors(Color color, Color websafeColor)
+        {
+            UpdateColorTexts(color, websafeColor);
+            ChangeColorBox(color, websafeColor);
+        }
+
+        private void ChangeColorBox(Color color, Color websafeColor)
         {
             inputColor = color;
             this.Refresh();
         }
 
-        private void UpdateColorTexts(Color color)
+        private void UpdateColorTexts(Color color, Color websafeColor)
         {
             UpdateHexText(color);
             UpdateRGBText(color);
-            updateHslText(color);
+            UpdateHslText(color);
+            UpdateWebsafeColor(websafeColor);
+            UpdateComplementaryText(color);
         }
 
         private void UpdateHexText(Color color)
@@ -290,7 +367,7 @@ namespace ColorConverter
 
         }
 
-        private void updateHslText(Color color)
+        private void UpdateHslText(Color color)
         {
             /* Wait, Color has HSL/HSB values? I don't need to calculate them myself then */
             int hue = (int)color.GetHue();
@@ -310,6 +387,29 @@ namespace ColorConverter
             hslBox.AppendText(String.Format("HSLA({0}, {1}%, {2}%, {3})", hue, saturation, lightness, alpha));
             hslBox.AppendText(String.Format("{0}", Environment.NewLine));
             hslBox.AppendText(String.Format("HSLA({0}°, {1}%, {2}%, {3})", hue, saturation, lightness, alpha));
+        }
+        private void UpdateWebsafeColor(Color color)
+        {
+            websafeBox.Text = "";
+            createdwebsafeColor = color;
+
+            websafeBox.AppendText(String.Format("#{0}{1}{2}", color.R.ToString("X2"), color.G.ToString("X2"), color.B.ToString("X2")));
+            websafeBox.AppendText(String.Format("{0}", Environment.NewLine));
+            websafeBox.AppendText(String.Format("RGB({0}, {1}, {2})", color.R, color.G, color.B));
+        }
+        private void UpdateComplementaryText(Color color)
+        {
+            float hue = (color.GetHue() + 180.0f) % 360.0f;
+
+            Color compColor = CreateColorFromHsl(hue, color.GetSaturation(), color.GetBrightness());
+
+            compTextBox1.Text = "";
+            createdComplementColor = compColor;
+
+            compTextBox1.AppendText(String.Format("#{0}{1}{2}", compColor.R.ToString("X2"), compColor.G.ToString("X2"), compColor.B.ToString("X2")));
+            compTextBox1.AppendText(String.Format("{0}", Environment.NewLine));
+            compTextBox1.AppendText(String.Format("RGB({0}, {1}, {2})", compColor.R, compColor.G, compColor.B));
+            
         }
     }
 }
