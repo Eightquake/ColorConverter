@@ -505,7 +505,7 @@ namespace ColorConverter
         private void UpdateColorHarmonyText(Color color)
         {
             int distance = 4;
-            Color[] colors = { CreateColorFromHsl((color.GetHue() + distance * 2) % 360.0f, color.GetSaturation(), color.GetBrightness() - 0.05f), CreateColorFromHsl((color.GetHue() + distance) % 360.0f, color.GetSaturation(), color.GetBrightness() - 0.05f), CreateColorFromHsl((color.GetHue() - distance) % 360.0f, color.GetSaturation(), color.GetBrightness()), CreateColorFromHsl((color.GetHue() - distance * 2) % 360.0f, color.GetSaturation(), color.GetBrightness()) };
+            Color[] colors = { CreateColorFromHsl((color.GetHue() + distance * 2) % 360.0f, color.GetSaturation(), color.GetBrightness()), CreateColorFromHsl((color.GetHue() + distance) % 360.0f, color.GetSaturation(), color.GetBrightness()), CreateColorFromHsl((color.GetHue() - distance) % 360.0f, color.GetSaturation(), color.GetBrightness()), CreateColorFromHsl((color.GetHue() - distance * 2) % 360.0f, color.GetSaturation(), color.GetBrightness()) };
             TextBox[] textBoxes = { analogousTextBox1, analogousTextBox2, analogousTextBox3, analogousTextBox4, };
 
             for(int i=0;i<colors.Length;i++)
