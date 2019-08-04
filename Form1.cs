@@ -29,7 +29,7 @@ namespace ColorConverter
             /* Form1_Load does not happen when this.refresh() is called in changeColorBox - that's a good thing as this only needs to be run once */
 
             /* Well, this RegEx took a while to find out. It captures any supported color system in the first group, and then the parameters in seperate groups. Optionally, for color systems with alpha channel, it captures the fractional as a parameter */
-            allSupportedRegex = new Regex(@"^((?:#)|(?:HEX)|(?:RGBA)|(?:RGB)|(?:HSL))[\(\s]?((?:\d+%?)|[0-9A-F]{2}),?\s?((?:\d+%?)|[0-9A-F]{2}),?\s?((?:\d+%?)|[0-9A-F]{2}),?\s?(0?[\.\,]?\d*)?[\)\s]?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            allSupportedRegex = new Regex(@"(^((?:(?:#)|(?:HEX)|(?:HEXA)))[\(\s]{0,2}([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})[\)\s]{0,2}$)|(^((?:(?:RGBA)|(?:RGB)|(?:HSL)|(?:HSLA)))[\(\s]{0,2}(\d+%?)[,\s]{0,2}(\d+%?)[,\s]{0,2}(\d+%?)[,\s]{0,2}(0?[\.\,]?\d*)?[\)\s]{0,2}?$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
         private void Form1_Resize(object sender, EventArgs e)
@@ -127,58 +127,63 @@ namespace ColorConverter
                 int red = 0, green = 0, blue = 0;
                 decimal alpha = 0;
 
-                /* I only really care about the first Full match */
+                /* I only really care about the first Full match, maybe the user entered more than one supported color but currently the program doesn't support that */
                 Match match = matches[0];
-                String colorSystem = match.Groups[1].Value.ToLowerInvariant();
-                int count = 0;
-                foreach(Group group in match.Groups)
+
+                String colorSystem = "";
+
+                if (match.Groups[2].Value.Length > 0)
                 {
-                    Debug.WriteLine("Group: {0}  Match: {1}", count++, group);
+                    colorSystem = match.Groups[2].Value.ToLowerInvariant();
+                }
+                else if (match.Groups[7].Value.Length > 0)
+                {
+                    colorSystem = match.Groups[7].Value.ToLowerInvariant();
                 }
 
-                if (colorSystem == "#" || colorSystem == "hex")
+                if (colorSystem == "#" || colorSystem == "hex" || colorSystem == "hexa")
                 {
                     /* The user entered a color using either # or HEX(). ColorTranslator supports hex right out of the box so I don't need to convert it. I know that groups 7, 8, 9 are the ones that captured the parameters so let's use them */
                     //convertedColor = System.Drawing.ColorTranslator.FromHtml("#" + match.Groups[2] + match.Groups[3] + match.Groups[4]);
-                    red = Convert.ToInt32(match.Groups[2].Value, 16);
-                    green = Convert.ToInt32(match.Groups[3].Value, 16);
-                    blue = Convert.ToInt32(match.Groups[4].Value, 16);
+                    red = Convert.ToInt32(match.Groups[3].Value, 16);
+                    green = Convert.ToInt32(match.Groups[4].Value, 16);
+                    blue = Convert.ToInt32(match.Groups[5].Value, 16);
                 }
                 else if (colorSystem == "rgb" || colorSystem == "rgba")
                 {
                     /* The user entered a color using RGB, let's create a color using Color.FromArgb but set alpha as 255 */
-                    if(match.Groups[2].Value.EndsWith("%"))
+                    if(match.Groups[8].Value.EndsWith("%"))
                     {
-                        red = 255 * (int.Parse(match.Groups[2].Value.Replace("%", "")) / 100);
+                        red = 255 * (int.Parse(match.Groups[8].Value.Replace("%", "")) / 100);
                     }
                     else
                     {
-                        red = int.Parse(match.Groups[2].Value);
+                        red = int.Parse(match.Groups[8].Value);
                     }
 
-                    if (match.Groups[3].Value.EndsWith("%"))
+                    if (match.Groups[9].Value.EndsWith("%"))
                     {
-                        green = 255 * (int.Parse(match.Groups[3].Value.Replace("%", "")) / 100);
+                        green = 255 * (int.Parse(match.Groups[9].Value.Replace("%", "")) / 100);
                     }
                     else
                     {
-                        green = int.Parse(match.Groups[3].Value);
+                        green = int.Parse(match.Groups[9].Value);
                     }
 
-                    if (match.Groups[4].Value.EndsWith("%"))
+                    if (match.Groups[10].Value.EndsWith("%"))
                     {
-                        blue = 255 * (int.Parse(match.Groups[4].Value.Replace("%", "")) / 100);
+                        blue = 255 * (int.Parse(match.Groups[10].Value.Replace("%", "")) / 100);
                     }
                     else
                     {
-                        blue = int.Parse(match.Groups[4].Value);
+                        blue = int.Parse(match.Groups[10].Value);
                     }
                 }
                 else if (colorSystem == "hsl" || colorSystem == "hsla")
                 {
-                    float hue = float.Parse(match.Groups[2].Value);
-                    float saturation = float.Parse(match.Groups[3].Value) / 100;
-                    float lightness = float.Parse(match.Groups[4].Value) / 100;
+                    float hue = float.Parse(match.Groups[8].Value);
+                    float saturation = float.Parse(match.Groups[9].Value) / 100;
+                    float lightness = float.Parse(match.Groups[10].Value) / 100;
 
                     Color hslColor = CreateColorFromHsl(hue, saturation, lightness);
                     red = hslColor.R;
@@ -187,17 +192,17 @@ namespace ColorConverter
                 }
                 if(colorSystem == "rgba" || colorSystem == "hsla")
                 {
-                    if (match.Groups[5].Value.EndsWith("%"))
+                    if (match.Groups[11].Value.EndsWith("%"))
                     {
-                        alpha = 255 * (decimal.Parse(match.Groups[5].Value) / 100);
+                        alpha = 255 * (decimal.Parse(match.Groups[11].Value) / 100);
                     }
-                    else if (match.Groups[5].Value.Contains(".") || match.Groups[5].Value.Contains(","))
+                    else if (match.Groups[11].Value.Contains(".") || match.Groups[11].Value.Contains(","))
                     {
-                        alpha = 255 * (decimal.Parse(match.Groups[5].Value.Replace(".", ",")));
+                        alpha = 255 * (decimal.Parse(match.Groups[11].Value.Replace(".", ",")));
                     }
                     else
                     {
-                        alpha = (decimal.Parse(match.Groups[5].Value));
+                        alpha = (decimal.Parse(match.Groups[11].Value));
                     }
                 }
                 else
