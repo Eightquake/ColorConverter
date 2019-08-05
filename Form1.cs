@@ -24,13 +24,13 @@ namespace ColorConverter
         {
             InitializeComponent();
         }
-        #region Windows Form method for events
+        #region Windows Form methods for events
         private void Form1_Load(object sender, EventArgs e)
         {
             /* Form1_Load does not happen when this.refresh() is called in changeColorBox - that's a good thing as this only needs to be run once */
 
             /* Well, this RegEx took a while to find out. It captures any supported color system in the first group, and then the parameters in seperate groups. Optionally, for color systems with alpha channel, it captures the fractional as a parameter */
-            allSupportedRegex = new Regex(@"(^((?:(?:#)|(?:HEX)|(?:HEXA)))[\(\s]{0,2}([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})[\)\s]{0,2}$)|(^((?:(?:RGBA)|(?:RGB)|(?:HSL)|(?:HSLA)))[\(\s]{0,2}(\d+%?)[,\s]{0,2}(\d+%?)[,\s]{0,2}(\d+%?)[,\s]{0,2}(0?[\.\,]?\d*)?[\)\s]{0,2}?$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            allSupportedRegex = new Regex(@"(^((?:(?:#)|(?:HEX)|(?:HEXA)))[\(\s]{0,2}([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})[\)\s]{0,2}$)|(^((?:(?:RGBA)|(?:RGB)|(?:HSL)|(?:HSLA)))[\(\s]{0,2}(\d+%?°?)[,\s]{0,2}(\d+%?)[,\s]{0,2}(\d+%?)[,\s]{0,2}([01]?[\.\,]?\d*)?[\)\s]{0,2}?$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
             createdHarmonyColors = new Color[] { new Color(), new Color(), new Color(), new Color()};
         }
@@ -203,6 +203,10 @@ namespace ColorConverter
             }
             
         }
+        /// <summary>
+        /// Tests the regex and if a match is found it tries to create a color from the match
+        /// </summary>
+        /// <param name="enteredString">the string to use as input</param>
         private void TestRegex(String enteredString)
         {
             MatchCollection matches = allSupportedRegex.Matches(enteredString);
@@ -218,17 +222,16 @@ namespace ColorConverter
 
                 if (match.Groups[2].Value.Length > 0)
                 {
-                    colorSystem = match.Groups[2].Value.ToLowerInvariant();
+                    colorSystem = match.Groups[2].Value.ToLower();
                 }
                 else if (match.Groups[7].Value.Length > 0)
                 {
-                    colorSystem = match.Groups[7].Value.ToLowerInvariant();
+                    colorSystem = match.Groups[7].Value.ToLower();
                 }
 
                 if (colorSystem == "#" || colorSystem == "hex" || colorSystem == "hexa")
                 {
-                    /* The user entered a color using either # or HEX(). ColorTranslator supports hex right out of the box so I don't need to convert it. I know that groups 7, 8, 9 are the ones that captured the parameters so let's use them */
-                    //convertedColor = System.Drawing.ColorTranslator.FromHtml("#" + match.Groups[2] + match.Groups[3] + match.Groups[4]);
+                    /* The user entered a color using either # or HEX(). HEXA isn't supported right now. */
                     red = Convert.ToInt32(match.Groups[3].Value, 16);
                     green = Convert.ToInt32(match.Groups[4].Value, 16);
                     blue = Convert.ToInt32(match.Groups[5].Value, 16);
@@ -265,22 +268,34 @@ namespace ColorConverter
                 }
                 else if (colorSystem == "hsl" || colorSystem == "hsla")
                 {
-                    float hue = float.Parse(match.Groups[8].Value);
-                    float saturation = float.Parse(match.Groups[9].Value) / 100;
-                    float lightness = float.Parse(match.Groups[10].Value) / 100;
+                    float hue = float.Parse(match.Groups[8].Value.Replace("°", "")),
+                        saturation = float.Parse(match.Groups[9].Value.Replace("%", "")) / 100,
+                        lightness = float.Parse(match.Groups[10].Value.Replace("%", "")) / 100;
 
-                    Color hslColor = CreateColorFromHsl(hue, saturation, lightness);
-                    red = hslColor.R;
-                    green = hslColor.G;
-                    blue = hslColor.B;
+                    Color hslColor = new Color();
+                    try
+                    {
+                        hslColor = CreateColorFromHsl(hue, saturation, lightness);
+                        red = hslColor.R;
+                        green = hslColor.G;
+                        blue = hslColor.B;
+                    }
+                    catch(ArgumentException e)
+                    {
+                        MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
                 if(colorSystem == "rgba" || colorSystem == "hsla")
                 {
-                    if (match.Groups[11].Value.EndsWith("%"))
+                    if(match.Groups[11].Value.Length == 0)
+                    {
+                        alpha = 255.0M;
+                    }
+                    else if (match.Groups[11].Value.EndsWith("%"))
                     {
                         alpha = 255 * (decimal.Parse(match.Groups[11].Value) / 100);
                     }
-                    else if (match.Groups[11].Value.Contains(".") || match.Groups[11].Value.Contains(","))
+                    else if (match.Groups[11].Value.Contains(".") || match.Groups[11].Value.Contains(",") || match.Groups[11].Value == "1")
                     {
                         alpha = 255 * (decimal.Parse(match.Groups[11].Value.Replace(".", ",")));
                     }
@@ -294,19 +309,46 @@ namespace ColorConverter
                     alpha = 255.0M;
                 }
 
+                Color convertedColor = new Color();
 
-                Color convertedColor = Color.FromArgb((int)alpha, red, green, blue);
-                Color websafeColor = createWebsafeFromRgb(red, green, blue);
+                try
+                {
+                    convertedColor = Color.FromArgb((int)alpha, red, green, blue);
+                }
+                catch(ArgumentException e)
+                {
+                    MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
 
-                UpdateAllColors(convertedColor, websafeColor);
+                UpdateAllColors(convertedColor);
             }
             else
             {
                 /* There was no match for the string provided - let the user know this. */
             }
         }
+        /// <summary>
+        /// Creates a new Color based on the parameters as a HSL color system
+        /// </summary>
+        /// <param name="hue">the hue, between 0 and 255 (inclusive)</param>
+        /// <param name="saturation">the saturation, between 0.0 and 1.0 (inclusive)</param>
+        /// <param name="lightness">the lightness, between 0.0 and 1.0 (inclusive)</param>
+        /// <returns>the new color</returns>
         private Color CreateColorFromHsl(float hue, float saturation, float lightness)
         {
+            if(hue < 0 || hue > 360)
+            {
+                throw new ArgumentException(String.Format("The value {0} is not a valid value for parameter hue. Hue needs to be between 0 and 360, inclusive.", hue), "hue");
+            }
+            if(saturation < 0.0f || saturation > 1.0f)
+            {
+                throw new ArgumentException(String.Format("The value {0} is not a valid value for parameter saturation. Saturation needs to be between 0 and 1, inclusive.", saturation), "saturation");
+            }
+            if(lightness < 0.0f || lightness > 1.0f)
+            {
+                throw new ArgumentException(String.Format("The value {0} is not a valid value for parameter lightness. Lightness needs to be between 0 and 1, inclusive.", lightness), "lightness");
+            }
+
             float hslred = 0,
                 hslgreen = 0,
                 hslblue = 0;
@@ -351,22 +393,35 @@ namespace ColorConverter
                 hslgreen = 0;
                 hslblue = second;
             }
+
             int red = (int)Math.Round((hslred + matchlight) * 255.0f),
                 green = (int)Math.Round((hslgreen + matchlight) * 255.0f),
                 blue = (int)Math.Round((hslblue + matchlight) * 255.0f);
-            try
-            {
-                return Color.FromArgb(red, green, blue);
-            }
-            catch(ArgumentException e)
-            {
-                /* The rgb values were out of range. This probably means the user entered a really dark or really light color and the color harmony now tried to create a color that doesn't exists */
-                /* Let's default to a transparent black if this happens */
-                return Color.FromArgb(0, 0, 0, 0);
-            }
+
+            return Color.FromArgb(red, green, blue);
         }
-        private Color createWebsafeFromRgb(int red, int green, int blue)
+        /// <summary>
+        /// Calculates the websafe version of a color in RGB.
+        /// </summary>
+        /// <param name="red">the red channel, between 0 and 255 (inclusive)</param>
+        /// <param name="green">the green channel, between 0 and 255 (inclusive)</param>
+        /// <param name="blue">the blue channel, between 0 and 255 (inclusive)</param>
+        /// <returns>the websafe color calculated</returns>
+        private Color CreateWebsafeFromRgb(int red, int green, int blue)
         {
+            if(red < 0 || red > 255)
+            {
+                throw new ArgumentException(String.Format("The value {0} is not a valid value for parameter red. Red needs to be between 0 and 255, inclusive.", red), "red");
+            }
+            if(green < 0 || green > 255)
+            {
+                throw new ArgumentException(String.Format("The value {0} is not a valid value for parameter green. Green needs to be between 0 and 255, inclusive.", green), "green");
+            }
+            if(blue < 0 || blue > 255)
+            {
+                throw new ArgumentException(String.Format("The value {0} is not a valid value for parameter blue. Blue needs to be between 0 and 255, inclusive.", blue), "blue");
+            }
+
             int remainder;
             remainder = red % 51;
             if (remainder > 25)
@@ -406,21 +461,25 @@ namespace ColorConverter
             inputColor = color;
             this.Refresh();
         }
-        #region Methods for updating all of the textboxes with the correct color
-        private void UpdateAllColors(Color color, Color websafeColor)
+        #region Methods for updating all of the texts and pictureboxes
+        private void UpdateAllColors(Color color)
         {
-            UpdateColorTexts(color, websafeColor);
+            UpdateColorTexts(color);
             ChangeColorBox(color);
         }
-        private void UpdateColorTexts(Color color, Color websafeColor)
+        private void UpdateColorTexts(Color color)
         {
             UpdateHexText(color);
             UpdateRGBText(color);
             UpdateHslText(color);
-            UpdateWebsafeColor(websafeColor);
+            UpdateWebsafeColor(color);
             UpdateComplementaryText(color);
             UpdateColorHarmonyText(color);
         }
+        /// <summary>
+        /// Updates the correct textbox based on the color supplied.
+        /// </summary>
+        /// <param name="color">the color to use</param>
         private void UpdateHexText(Color color)
         {
             String red = color.R.ToString("X2");
@@ -433,6 +492,10 @@ namespace ColorConverter
             hexBox.AppendText(String.Format("{0}{0}", Environment.NewLine));
             hexBox.AppendText(String.Format("#RRGGBBAA\t#{0}{1}{2}{3}", red, green, blue, alpha));
         }
+        /// <summary>
+        /// Updates the correct textbox based on the color supplied.
+        /// </summary>
+        /// <param name="color">the color to use</param>
         private void UpdateRGBText(Color color)
         {
             int red = color.R;
@@ -459,9 +522,14 @@ namespace ColorConverter
             rgbBox.AppendText(String.Format("ARGB({3}%, {0}%, {1}%, {2}%){5}ARGB({4}, {0}%, {1}%, {2})", redpercentage, greenpercentage, bluepercentage, alphapercentage, alpha, Environment.NewLine));
 
         }
+        /// <summary>
+        /// Updates the correct textbox based on the color supplied.
+        /// </summary>
+        /// <param name="color">the color to use</param>
         private void UpdateHslText(Color color)
         {
             /* Wait, Color has HSL/HSB values? I don't need to calculate them myself then */
+
             int hue = (int)color.GetHue();
             int saturation = (int)(color.GetSaturation() * 100);
             int lightness = (int)(color.GetBrightness() * 100);
@@ -480,15 +548,25 @@ namespace ColorConverter
             hslBox.AppendText(String.Format("{0}", Environment.NewLine));
             hslBox.AppendText(String.Format("HSLA({0}°, {1}%, {2}%, {3})", hue, saturation, lightness, alpha));
         }
+        /// <summary>
+        /// Calculates the websafe color version of the supplied color and adds it to the textbox and picturebox.
+        /// </summary>
+        /// <param name="color">the color to calculate the websafe color from</param>
         private void UpdateWebsafeColor(Color color)
         {
-            websafeBox.Text = "";
-            createdwebsafeColor = color;
+            Color websafeColor = CreateWebsafeFromRgb(color.R, color.G, color.B);
 
-            websafeBox.AppendText(String.Format("#{0}{1}{2}", color.R.ToString("X2"), color.G.ToString("X2"), color.B.ToString("X2")));
+            websafeBox.Text = "";
+            createdwebsafeColor = websafeColor;
+
+            websafeBox.AppendText(String.Format("#{0}{1}{2}", websafeColor.R.ToString("X2"), websafeColor.G.ToString("X2"), websafeColor.B.ToString("X2")));
             websafeBox.AppendText(String.Format("{0}{0}", Environment.NewLine));
-            websafeBox.AppendText(String.Format("RGB({0}, {1}, {2})", color.R, color.G, color.B));
+            websafeBox.AppendText(String.Format("RGB({0}, {1}, {2})", websafeColor.R, websafeColor.G, websafeColor.B));
         }
+        /// <summary>
+        /// Calculates the complementary color of the supplied color and adds it to the textbox and picturebox.
+        /// </summary>
+        /// <param name="color">the color to calculate the complementary color from</param>
         private void UpdateComplementaryText(Color color)
         {
             float hue = (color.GetHue() + 180.0f) % 360.0f;
@@ -499,25 +577,38 @@ namespace ColorConverter
             createdComplementColor = compColor;
 
             compTextBox1.AppendText(String.Format("#{0}{1}{2}", compColor.R.ToString("X2"), compColor.G.ToString("X2"), compColor.B.ToString("X2")));
-            compTextBox1.AppendText(String.Format("{0}{0}", Environment.NewLine));
-            compTextBox1.AppendText(String.Format("RGB({0}, {1}, {2})", compColor.R, compColor.G, compColor.B));   
         }
+        /// <summary>
+        /// Creates an analogous color harmony based on a color and adds them to the textboxes and pictureboxes. The number of colors it creates is dependent on the amount of textboxes for the color harmony. 
+        /// It creates the color by stepping an equal amount of way away from the original color or the color created before it, on the color wheel. It will wrap around if larger than 360 or smaller than 0.
+        /// </summary>
+        /// <param name="color">the color to base the color harmony on</param>
         private void UpdateColorHarmonyText(Color color)
         {
-            int distance = 4;
-            Color[] colors = { CreateColorFromHsl((color.GetHue() + distance * 2) % 360.0f, color.GetSaturation(), color.GetBrightness()), CreateColorFromHsl((color.GetHue() + distance) % 360.0f, color.GetSaturation(), color.GetBrightness()), CreateColorFromHsl((color.GetHue() - distance) % 360.0f, color.GetSaturation(), color.GetBrightness()), CreateColorFromHsl((color.GetHue() - distance * 2) % 360.0f, color.GetSaturation(), color.GetBrightness()) };
-            TextBox[] textBoxes = { analogousTextBox1, analogousTextBox2, analogousTextBox3, analogousTextBox4, };
+            int distance = 6;
+            TextBox[] textBoxes = { analogousTextBox1, analogousTextBox2, analogousTextBox3, analogousTextBox4 };
 
-            for(int i=0;i<colors.Length;i++)
+            /* Let's assume that createdHarmonyColors has the same length as the textboxes and pictureboxes */
+
+            
+            int distanceIndex = -(distance / (textBoxes.Length - 1));
+            for (int i = 0; i < textBoxes.Length; i++)
             {
-                Color thisColor = colors[i];
+                if (distanceIndex == 0) distanceIndex++;
+
+                int thisDistance = distance * distanceIndex++;
+
+                /* Well apparently modulo is not the same in C# as it usually is in programming, so here's the correct calculation */
+                int thisHue = (int)Math.Round((color.GetHue() - thisDistance) - 360.0f * (float)Math.Floor((color.GetHue() - thisDistance) / 360.0f));
+
+                Color thisColor = CreateColorFromHsl(thisHue, color.GetSaturation(), color.GetBrightness());
+
                 createdHarmonyColors[i] = thisColor;
                 textBoxes[i].Text = "";
                 textBoxes[i].AppendText(String.Format("#{0}{1}{2}", thisColor.R.ToString("X2"), thisColor.G.ToString("X2"), thisColor.B.ToString("X2")));
             }
         }
         #endregion
-
         #endregion
     }
 }

@@ -82,7 +82,10 @@
             // 
             // colorInputBox
             // 
+            this.colorInputBox.AllowDrop = true;
             this.colorInputBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.colorInputBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.colorInputBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.RecentlyUsedList;
             this.colorInputBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.colorInputBox.Location = new System.Drawing.Point(3, 3);
             this.colorInputBox.Name = "colorInputBox";
