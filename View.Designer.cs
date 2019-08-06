@@ -1,6 +1,6 @@
 ﻿namespace ColorConverter
 {
-    partial class Form1
+    partial class View
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(View));
             this.colorInputBox = new System.Windows.Forms.TextBox();
             this.introLabel = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
@@ -51,9 +51,9 @@
             this.websafePictureBox = new System.Windows.Forms.PictureBox();
             this.websafeBox = new System.Windows.Forms.TextBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.compTextBox1 = new System.Windows.Forms.TextBox();
-            this.compPictureBox1 = new System.Windows.Forms.PictureBox();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.compTextBox = new System.Windows.Forms.TextBox();
+            this.compPictureBox = new System.Windows.Forms.PictureBox();
+            this.colorHarmonyGroup = new System.Windows.Forms.GroupBox();
             this.analogousTextBox4 = new System.Windows.Forms.TextBox();
             this.analogousPictureBox4 = new System.Windows.Forms.PictureBox();
             this.analogousTextBox3 = new System.Windows.Forms.TextBox();
@@ -72,8 +72,8 @@
             this.groupbox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.websafePictureBox)).BeginInit();
             this.groupBox5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.compPictureBox1)).BeginInit();
-            this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.compPictureBox)).BeginInit();
+            this.colorHarmonyGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.analogousPictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.analogousPictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.analogousPictureBox2)).BeginInit();
@@ -294,8 +294,8 @@
             // 
             // groupBox5
             // 
-            this.groupBox5.Controls.Add(this.compTextBox1);
-            this.groupBox5.Controls.Add(this.compPictureBox1);
+            this.groupBox5.Controls.Add(this.compTextBox);
+            this.groupBox5.Controls.Add(this.compPictureBox);
             this.groupBox5.Location = new System.Drawing.Point(603, 410);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(169, 139);
@@ -303,44 +303,44 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Complementary";
             // 
-            // compTextBox1
+            // compTextBox
             // 
-            this.compTextBox1.BackColor = System.Drawing.SystemColors.Control;
-            this.compTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.compTextBox1.Location = new System.Drawing.Point(6, 97);
-            this.compTextBox1.Multiline = true;
-            this.compTextBox1.Name = "compTextBox1";
-            this.compTextBox1.ReadOnly = true;
-            this.compTextBox1.Size = new System.Drawing.Size(157, 36);
-            this.compTextBox1.TabIndex = 1;
+            this.compTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.compTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.compTextBox.Location = new System.Drawing.Point(6, 97);
+            this.compTextBox.Multiline = true;
+            this.compTextBox.Name = "compTextBox";
+            this.compTextBox.ReadOnly = true;
+            this.compTextBox.Size = new System.Drawing.Size(157, 36);
+            this.compTextBox.TabIndex = 1;
             // 
-            // compPictureBox1
+            // compPictureBox
             // 
-            this.compPictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.compPictureBox1.Location = new System.Drawing.Point(6, 19);
-            this.compPictureBox1.Name = "compPictureBox1";
-            this.compPictureBox1.Size = new System.Drawing.Size(157, 70);
-            this.compPictureBox1.TabIndex = 0;
-            this.compPictureBox1.TabStop = false;
-            this.compPictureBox1.Click += new System.EventHandler(this.CompPictureBox1_Click);
-            this.compPictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.CompPictureBox1_Paint);
+            this.compPictureBox.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.compPictureBox.Location = new System.Drawing.Point(6, 19);
+            this.compPictureBox.Name = "compPictureBox";
+            this.compPictureBox.Size = new System.Drawing.Size(157, 70);
+            this.compPictureBox.TabIndex = 0;
+            this.compPictureBox.TabStop = false;
+            this.compPictureBox.Click += new System.EventHandler(this.CompPictureBox1_Click);
+            this.compPictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.CompPictureBox1_Paint);
             // 
-            // groupBox6
+            // colorHarmonyGroup
             // 
-            this.groupBox6.Controls.Add(this.analogousTextBox4);
-            this.groupBox6.Controls.Add(this.analogousPictureBox4);
-            this.groupBox6.Controls.Add(this.analogousTextBox3);
-            this.groupBox6.Controls.Add(this.analogousPictureBox3);
-            this.groupBox6.Controls.Add(this.analogousTextBox2);
-            this.groupBox6.Controls.Add(this.analogousPictureBox2);
-            this.groupBox6.Controls.Add(this.analogousTextBox1);
-            this.groupBox6.Controls.Add(this.analogousPictureBox1);
-            this.groupBox6.Location = new System.Drawing.Point(268, 410);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(329, 139);
-            this.groupBox6.TabIndex = 12;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Analogous color harmony";
+            this.colorHarmonyGroup.Controls.Add(this.analogousTextBox4);
+            this.colorHarmonyGroup.Controls.Add(this.analogousPictureBox4);
+            this.colorHarmonyGroup.Controls.Add(this.analogousTextBox3);
+            this.colorHarmonyGroup.Controls.Add(this.analogousPictureBox3);
+            this.colorHarmonyGroup.Controls.Add(this.analogousTextBox2);
+            this.colorHarmonyGroup.Controls.Add(this.analogousPictureBox2);
+            this.colorHarmonyGroup.Controls.Add(this.analogousTextBox1);
+            this.colorHarmonyGroup.Controls.Add(this.analogousPictureBox1);
+            this.colorHarmonyGroup.Location = new System.Drawing.Point(268, 410);
+            this.colorHarmonyGroup.Name = "colorHarmonyGroup";
+            this.colorHarmonyGroup.Size = new System.Drawing.Size(329, 139);
+            this.colorHarmonyGroup.TabIndex = 12;
+            this.colorHarmonyGroup.TabStop = false;
+            this.colorHarmonyGroup.Text = "Analogous color harmony";
             // 
             // analogousTextBox4
             // 
@@ -430,14 +430,14 @@
             this.analogousPictureBox1.Click += new System.EventHandler(this.AnalogousPictureBox1_Click);
             this.analogousPictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.AnalogousPictureBox1_Paint);
             // 
-            // Form1
+            // View
             // 
             this.AcceptButton = this.button1;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(784, 561);
-            this.Controls.Add(this.groupBox6);
+            this.Controls.Add(this.colorHarmonyGroup);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupbox4);
             this.Controls.Add(this.groupBox3);
@@ -448,7 +448,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "Form1";
+            this.Name = "View";
             this.Text = "Colorconverter";
             this.Activated += new System.EventHandler(this.Form1_GotFocus);
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -470,9 +470,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.websafePictureBox)).EndInit();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.compPictureBox1)).EndInit();
-            this.groupBox6.ResumeLayout(false);
-            this.groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.compPictureBox)).EndInit();
+            this.colorHarmonyGroup.ResumeLayout(false);
+            this.colorHarmonyGroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.analogousPictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.analogousPictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.analogousPictureBox2)).EndInit();
@@ -504,9 +504,9 @@
         private System.Windows.Forms.TextBox websafeBox;
         private System.Windows.Forms.PictureBox websafePictureBox;
         private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.TextBox compTextBox1;
-        private System.Windows.Forms.PictureBox compPictureBox1;
-        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.TextBox compTextBox;
+        private System.Windows.Forms.PictureBox compPictureBox;
+        private System.Windows.Forms.GroupBox colorHarmonyGroup;
         private System.Windows.Forms.TextBox analogousTextBox3;
         private System.Windows.Forms.PictureBox analogousPictureBox3;
         private System.Windows.Forms.TextBox analogousTextBox2;

@@ -16,7 +16,15 @@ namespace ColorConverter
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            /* MVP architechture, first create the model, view and presenter - then let the presenter know of the view */
+            Model theModel = new Model();
+            Presenter thePresenter = new Presenter(theModel);
+            View theView = new View(thePresenter);
+
+            thePresenter.SetView(theView);
+
+            Application.Run(theView as Form);
         }
     }
 }
