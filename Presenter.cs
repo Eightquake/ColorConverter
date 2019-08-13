@@ -43,7 +43,7 @@ namespace ColorConverter
         /// Tests the regex and if a match is found it tries to create a color from the match
         /// </summary>
         /// <param name="enteredstring">the string to use as input</param>
-        public void TestRegex(string enteredstring)
+        public Color TestRegex(string enteredstring)
         {
             MatchCollection matches = model.Regex.Matches(enteredstring);
             if (matches.Count > 0)
@@ -77,7 +77,7 @@ namespace ColorConverter
                     /* The user entered a color using RGB, let's create a color using Color.FromArgb but set alpha as 255 */
                     if (match.Groups[8].Value.EndsWith("%"))
                     {
-                        red = 255 * (int.Parse(match.Groups[8].Value.Replace("%", "")) / 100);
+                        red = 255 * int.Parse(match.Groups[8].Value.Replace("%", "")) / 100;
                     }
                     else
                     {
@@ -86,7 +86,7 @@ namespace ColorConverter
 
                     if (match.Groups[9].Value.EndsWith("%"))
                     {
-                        green = 255 * (int.Parse(match.Groups[9].Value.Replace("%", "")) / 100);
+                        green = 255 * int.Parse(match.Groups[9].Value.Replace("%", "")) / 100;
                     }
                     else
                     {
@@ -95,7 +95,7 @@ namespace ColorConverter
 
                     if (match.Groups[10].Value.EndsWith("%"))
                     {
-                        blue = 255 * (int.Parse(match.Groups[10].Value.Replace("%", "")) / 100);
+                        blue = 255 * int.Parse(match.Groups[10].Value.Replace("%", "")) / 100;
                     }
                     else
                     {
@@ -155,9 +155,15 @@ namespace ColorConverter
                 catch (ArgumentException e)
                 {
                     MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return new Color();
                 }
+
+                // For testing purposes, this return statement isn't needed by any of the running code
+                return convertedColor;
                 
             }
+
+            return new Color();
         }
         /// <summary>
         /// Creates a new Color based on the parameters as a HSL color system
@@ -166,7 +172,7 @@ namespace ColorConverter
         /// <param name="saturation">the saturation, between 0.0 and 1.0 (inclusive)</param>
         /// <param name="lightness">the lightness, between 0.0 and 1.0 (inclusive)</param>
         /// <returns>the new color</returns>
-        private Color CreateColorFromHsl(float hue, float saturation, float lightness)
+        public Color CreateColorFromHsl(float hue, float saturation, float lightness)
         {
             if (hue < 0 || hue > 360)
             {
@@ -239,7 +245,7 @@ namespace ColorConverter
         /// <param name="green">the green channel, between 0 and 255 (inclusive)</param>
         /// <param name="blue">the blue channel, between 0 and 255 (inclusive)</param>
         /// <returns>the websafe color calculated</returns>
-        private Color CreateWebsafeFromRgb(int red, int green, int blue)
+        public Color CreateWebsafeFromRgb(int red, int green, int blue)
         {
             if (red < 0 || red > 255)
             {
