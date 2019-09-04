@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace ColorConverter_WPF
 {
-    static class ColorCalculator
+    internal static class ColorCalculator
     {
         static public Color CalculateWebsafeFromColor(Color color)
         {
@@ -44,6 +40,7 @@ namespace ColorConverter_WPF
 
             return Color.FromArgb(255, (byte)red, (byte)green, (byte)blue);
         }
+
         static public Color CalculateComplementFromColor(Color color)
         {
             byte compR = (byte)(Math.Max(color.R, Math.Max(color.G, color.B)) + Math.Min(color.R, Math.Min(color.G, color.B)) - color.R);

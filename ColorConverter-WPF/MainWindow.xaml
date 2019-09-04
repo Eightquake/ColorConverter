@@ -11,12 +11,12 @@
     </Window.CommandBindings>
     <Grid Name="InputTextAndBoxGrid" Width="800" Height="600" VerticalAlignment="Top">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="400"/>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="400" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="200"/>
+            <RowDefinition Height="200" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Rectangle Name="InputColorBox" Fill="{Binding InputColor}" HorizontalAlignment="Left" Grid.ColumnSpan="3" VerticalAlignment="Top" Width="800" Height="200" />
@@ -29,30 +29,30 @@
                         <KeyBinding Command="self:CustomCommands.CheckInput" Key="Return" />
                     </TextBox.InputBindings>
                 </TextBox>
-                <Button Content="Convert!" Width="75" Command="self:CustomCommands.CheckInput"/>
+                <Button Content="Convert!" Width="75" Command="self:CustomCommands.CheckInput" />
             </StackPanel>
         </StackPanel>
         <WrapPanel Grid.Row="1" Grid.ColumnSpan="3" Width="800" Height="400">
             <StackPanel Orientation="Horizontal" Width="800">
                 <StackPanel Width="150" Margin="5,0">
                     <Rectangle Name="HarmonyColorBox1" Fill="{Binding HarmonyColors[0]}" Height="50" Width="150" Cursor="Hand" />
-                    <TextBlock Height="50" TextWrapping="Wrap" Text="Harmony1" IsEnabled="False"/>
+                    <TextBlock Height="50" TextWrapping="Wrap" Text="Harmony1" IsEnabled="False" />
                 </StackPanel>
                 <StackPanel Width="150" Margin="5,0">
                     <Rectangle Name="HarmonyColorBox2" Fill="{Binding HarmonyColors[1]}" Height="50" Cursor="Hand" />
-                    <TextBlock Height="50" TextWrapping="Wrap" Text="Harmony2" IsEnabled="False"/>
+                    <TextBlock Height="50" TextWrapping="Wrap" Text="Harmony2" IsEnabled="False" />
                 </StackPanel>
                 <StackPanel Width="150" Margin="5,0">
                     <Rectangle Name="HarmonyColorBoxBase" Fill="{Binding InputColor}" Height="50" Cursor="Arrow" />
-                    <TextBlock Height="50" TextWrapping="Wrap" Text="HarmonyBase" IsEnabled="False"/>
+                    <TextBlock Height="50" TextWrapping="Wrap" Text="HarmonyBase" IsEnabled="False" />
                 </StackPanel>
                 <StackPanel Width="150" Margin="5,0">
                     <Rectangle Name="HarmonyColorBox3" Fill="{Binding HarmonyColors[2]}" Height="50" Cursor="Hand" />
-                    <TextBlock Height="50" TextWrapping="Wrap" Text="Harmony3" IsEnabled="False"/>
+                    <TextBlock Height="50" TextWrapping="Wrap" Text="Harmony3" IsEnabled="False" />
                 </StackPanel>
                 <StackPanel Width="140" Margin="5,0">
                     <Rectangle Name="HarmonyColorBox4" Fill="{Binding HarmonyColors[3]}" Height="50" Cursor="Hand" />
-                    <TextBlock Height="50" TextWrapping="Wrap" Text="Harmony4" IsEnabled="False"/>
+                    <TextBlock Height="50" TextWrapping="Wrap" Text="Harmony4" IsEnabled="False" />
                 </StackPanel>
             </StackPanel>
             <StackPanel Width="100" Margin="10, 0, 5, 0">
@@ -67,7 +67,7 @@
             </StackPanel>
             <TextBlock IsEnabled="False" Width="150">
                 <Label>Hex</Label><LineBreak />
-                <TextBlock Name="HexTextBlock" IsEnabled="False" Text=""/>
+                <TextBlock Name="HexTextBlock" IsEnabled="False" Text="" />
             </TextBlock>
         </WrapPanel>
     </Grid>

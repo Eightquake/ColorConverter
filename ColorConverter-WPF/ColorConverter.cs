@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace ColorConverter_WPF
 {
-    static class ColorConverter
+    internal static class ColorConverter
     {
         static public Color ConvertFromHexString(string hexStringR, string hexStringG, string hexStringB, string hexStringA = "FF")
         {
@@ -19,6 +14,7 @@ namespace ColorConverter_WPF
 
             return CreateColorFromRGB(red, green, blue, alpha);
         }
+
         static public Color ConvertFromRGBString(string rbgStringR, string rgbStringG, string rgbStringB, string rgbStringA)
         {
             byte red, green, blue;
@@ -53,6 +49,7 @@ namespace ColorConverter_WPF
 
             return CreateColorFromRGB(red, green, blue, alpha);
         }
+
         static public Color ConvertFromHSLString(string hslStringH, string hslStringS, string hslStringL, string hslStringA)
         {
             float hue = float.Parse(hslStringH.Replace("°", "")),
@@ -63,11 +60,13 @@ namespace ColorConverter_WPF
 
             return CreateColorFromHSL(hue, saturation, lightness, alpha);
         }
+
         static public Color CreateColorFromRGB(byte red, byte green, byte blue, byte alpha)
         {
             /* Well I was going to add some exception checks here - but I realised I already use unsigned bytes so they can't be out of range. An exception would have been thrown already if that was the case */
             return Color.FromArgb(alpha, red, green, blue);
         }
+
         static public Color CreateColorFromHSL(float hue, float saturation, float lightness, byte alpha)
         {
             if (hue < 0 || hue > 360)
@@ -134,6 +133,7 @@ namespace ColorConverter_WPF
 
             return CreateColorFromRGB(red, green, blue, alpha);
         }
+
         static private byte ConvertAlphaStringToByte(string alphaString)
         {
             byte alpha;
