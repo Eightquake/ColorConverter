@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Media;
 
 namespace ColorConverter_WPF
 {
-    static class InputChecker
+    internal static class InputChecker
     {
         static private readonly Regex Regex = new Regex(@"(^((?:(?:#)|(?:HEX)|(?:HEXA)))[\(\s]{0,2}([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})[\)\s]{0,2}$)|(^((?:(?:RGBA)|(?:RGB)|(?:HSL)|(?:HSLA)))[\(\s]{0,2}(\d+%?°?)[,\s]{0,2}(\d+%?)[,\s]{0,2}(\d+%?)[,\s]{0,2}([01]?[\.\,]?\d*)?[\)\s]{0,2}?$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
         static public Color TestRegex(string enteredstring)
         {
             MatchCollection matches = Regex.Matches(enteredstring);
@@ -50,7 +46,7 @@ namespace ColorConverter_WPF
                         return ColorConverter.ConvertFromHSLString(match.Groups[8].Value, match.Groups[9].Value, match.Groups[10].Value, match.Groups[11].Value);
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Debug.WriteLine(String.Format("Caught exception while trying to convert string to color, error: {0}", e));
                 }

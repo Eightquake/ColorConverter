@@ -1,20 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.ComponentModel;
-using System.Collections.ObjectModel;
 
 namespace ColorConverter_WPF
 {
@@ -24,12 +11,14 @@ namespace ColorConverter_WPF
     public partial class MainWindow : Window
     {
         private readonly MyColorBrushes Model;
+
         public MainWindow()
         {
             InitializeComponent();
             Model = MyColorBrushes.GetBrushes();
             DataContext = Model;
         }
+
         private void InputCheckCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             Color enteredColor = InputChecker.TestRegex(InputTextBox.Text);
@@ -43,15 +32,16 @@ namespace ColorConverter_WPF
             Model.ComplementText = complementColor.ToString();
         }
     }
+
     public class MyColorBrushes : INotifyPropertyChanged
     {
-        SolidColorBrush _inputColor = new SolidColorBrush();
-        SolidColorBrush _websafeColor = new SolidColorBrush();
-        string _websafeText = "";
-        SolidColorBrush _complementColor = new SolidColorBrush();
-        string _complementText = "";
-        SolidColorBrush[] _harmonyColors = new SolidColorBrush[] { new SolidColorBrush(), new SolidColorBrush(), new SolidColorBrush(), new SolidColorBrush() };
-        static MyColorBrushes _brushes;
+        private SolidColorBrush _inputColor = new SolidColorBrush();
+        private SolidColorBrush _websafeColor = new SolidColorBrush();
+        private string _websafeText = "";
+        private SolidColorBrush _complementColor = new SolidColorBrush();
+        private string _complementText = "";
+        private SolidColorBrush[] _harmonyColors = new SolidColorBrush[] { new SolidColorBrush(), new SolidColorBrush(), new SolidColorBrush(), new SolidColorBrush() };
+        private static MyColorBrushes _brushes;
 
         public SolidColorBrush InputColor
         {
@@ -65,6 +55,7 @@ namespace ColorConverter_WPF
                 }
             }
         }
+
         public SolidColorBrush WebsafeColor
         {
             get { return this._websafeColor; }
@@ -77,6 +68,7 @@ namespace ColorConverter_WPF
                 }
             }
         }
+
         public string WebsafeText
         {
             get { return this._websafeText; }
@@ -89,6 +81,7 @@ namespace ColorConverter_WPF
                 }
             }
         }
+
         public SolidColorBrush ComplementColor
         {
             get { return this._complementColor; }
@@ -101,6 +94,7 @@ namespace ColorConverter_WPF
                 }
             }
         }
+
         public string ComplementText
         {
             get { return this._complementText; }
@@ -113,6 +107,7 @@ namespace ColorConverter_WPF
                 }
             }
         }
+
         public SolidColorBrush[] HarmonyColors
         {
             get { return this._harmonyColors; }
@@ -125,6 +120,7 @@ namespace ColorConverter_WPF
                 }
             }
         }
+
         public static MyColorBrushes GetBrushes()
         {
             if (_brushes == null)
