@@ -1,29 +1,30 @@
 ﻿<Window x:Class="ColorConverter_WPF.MainWindow"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:self="clr-namespace:ColorConverter_WPF"
-        mc:Ignorable="d"
-        Title="ColorConverter" WindowStartupLocation="CenterScreen" Width="800" Height="600">
+        Title="ColorConverter" WindowStartupLocation="CenterScreen" Width="806" Height="625">
     <Window.CommandBindings>
         <CommandBinding Command="self:CustomCommands.CheckInput"  Executed="InputCheckCommand_Executed" />
     </Window.CommandBindings>
-    <Grid Name="InputTextAndBoxGrid" Width="800" Height="200" VerticalAlignment="Top">
+    <Grid Name="InputTextAndBoxGrid" Width="800" Height="600" VerticalAlignment="Top">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="400"/>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition />
+            <RowDefinition Height="200"/>
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Rectangle Name="InputColorBox" HorizontalAlignment="Left" Grid.ColumnSpan="3" VerticalAlignment="Top" Width="800" Height="200" />
+        <Rectangle Name="InputColorBox" Fill="{Binding InputColor}" HorizontalAlignment="Left" Grid.ColumnSpan="3" VerticalAlignment="Top" Width="800" Height="200" />
         <StackPanel Grid.Column="1" Background="#FF666666" Height="120" Width="400" VerticalAlignment="Center">
             <Label FontSize="18" HorizontalAlignment="Center" Foreground="White">Enter a color</Label>
             <Label HorizontalAlignment="Center" Foreground="White" Margin="0,-5,0,0">Using hex, RGB, RGBA, HSL or HSLA</Label>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,0">
-                <TextBox Name="InputTextBox" Height="23" TextWrapping="Wrap" Text="" Width="120">
+                <TextBox Name="InputTextBox" Height="23" TextWrapping="NoWrap" Text="" Width="150">
                     <TextBox.InputBindings>
                         <KeyBinding Command="self:CustomCommands.CheckInput" Key="Return" />
                     </TextBox.InputBindings>
@@ -31,5 +32,43 @@
                 <Button Content="Convert!" Width="75" Command="self:CustomCommands.CheckInput"/>
             </StackPanel>
         </StackPanel>
+        <WrapPanel Grid.Row="1" Grid.ColumnSpan="3" Width="800" Height="400">
+            <StackPanel Orientation="Horizontal" Width="800">
+                <StackPanel Width="150" Margin="5,0">
+                    <Rectangle Name="HarmonyColorBox1" Fill="{Binding HarmonyColors[0]}" Height="50" Width="150" Cursor="Hand" />
+                    <TextBlock Height="50" TextWrapping="Wrap" Text="Harmony1" IsEnabled="False"/>
+                </StackPanel>
+                <StackPanel Width="150" Margin="5,0">
+                    <Rectangle Name="HarmonyColorBox2" Fill="{Binding HarmonyColors[1]}" Height="50" Cursor="Hand" />
+                    <TextBlock Height="50" TextWrapping="Wrap" Text="Harmony2" IsEnabled="False"/>
+                </StackPanel>
+                <StackPanel Width="150" Margin="5,0">
+                    <Rectangle Name="HarmonyColorBoxBase" Fill="{Binding InputColor}" Height="50" Cursor="Arrow" />
+                    <TextBlock Height="50" TextWrapping="Wrap" Text="HarmonyBase" IsEnabled="False"/>
+                </StackPanel>
+                <StackPanel Width="150" Margin="5,0">
+                    <Rectangle Name="HarmonyColorBox3" Fill="{Binding HarmonyColors[2]}" Height="50" Cursor="Hand" />
+                    <TextBlock Height="50" TextWrapping="Wrap" Text="Harmony3" IsEnabled="False"/>
+                </StackPanel>
+                <StackPanel Width="140" Margin="5,0">
+                    <Rectangle Name="HarmonyColorBox4" Fill="{Binding HarmonyColors[3]}" Height="50" Cursor="Hand" />
+                    <TextBlock Height="50" TextWrapping="Wrap" Text="Harmony4" IsEnabled="False"/>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Width="100" Margin="10, 0, 5, 0">
+                <Label>Websafe</Label>
+                <Rectangle Name="WebsafeColorBox" Fill="{Binding WebsafeColor}" Height="50" Cursor="Hand" />
+                <TextBlock Height="50" TextWrapping="Wrap" Text="{Binding WebsafeText}" IsEnabled="False" />
+            </StackPanel>
+            <StackPanel Width="100" Margin="5,0">
+                <Label>Complement</Label>
+                <Rectangle Name="ComplementColorBox" Fill="{Binding ComplementColor}" Height="50" Cursor="Hand" />
+                <TextBlock  Height="50" TextWrapping="Wrap" Text="{Binding ComplementText}" IsEnabled="False" />
+            </StackPanel>
+            <TextBlock IsEnabled="False" Width="150">
+                <Label>Hex</Label><LineBreak />
+                <TextBlock Name="HexTextBlock" IsEnabled="False" Text=""/>
+            </TextBlock>
+        </WrapPanel>
     </Grid>
 </Window>
