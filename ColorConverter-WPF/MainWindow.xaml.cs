@@ -1,5 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -16,34 +19,51 @@ namespace ColorConverter_WPF
         {
             InitializeComponent();
             Model = MyColorBrushes.GetBrushes();
-            DataContext = Model;
+            InputTextAndBoxGrid.DataContext = Model;
+            this.DataContext = this;
         }
 
         private void InputCheckCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Color enteredColor = InputChecker.TestRegex(InputTextBox.Text);
+            Color enteredColor = InputChecker.TestRegex(Model.InputBoxText);
+            Model.InputColor = enteredColor;
 
-            Model.InputColor = new SolidColorBrush(enteredColor);
             Color websafeColor = ColorCalculator.CalculateWebsafeFromColor(enteredColor);
-            Model.WebsafeColor = new SolidColorBrush(websafeColor);
-            Model.WebsafeText = websafeColor.ToString();
+            Model.WebsafeColor = websafeColor;
+
             Color complementColor = ColorCalculator.CalculateComplementFromColor(enteredColor);
-            Model.ComplementColor = new SolidColorBrush(complementColor);
-            Model.ComplementText = complementColor.ToString();
+            Model.ComplementColor = complementColor;
+
+            Color[] harmonyColors = ColorCalculator.CalculateHarmonyFromColor(enteredColor);
+            Model.HarmonyColors = harmonyColors;
         }
     }
 
     public class MyColorBrushes : INotifyPropertyChanged
     {
-        private SolidColorBrush _inputColor = new SolidColorBrush();
-        private SolidColorBrush _websafeColor = new SolidColorBrush();
-        private string _websafeText = "";
-        private SolidColorBrush _complementColor = new SolidColorBrush();
-        private string _complementText = "";
-        private SolidColorBrush[] _harmonyColors = new SolidColorBrush[] { new SolidColorBrush(), new SolidColorBrush(), new SolidColorBrush(), new SolidColorBrush() };
+        private string _inputBoxText = "";
+        private Color _inputColor = new Color();
+        private Color _websafeColor = new Color();
+        private Color _complementColor = new Color();
+        private Color[] _harmonyColors = new Color[] { new Color(), new Color(), new Color(), new Color() };
+
+        /* Singleton design, keep a reference to the one here */
         private static MyColorBrushes _brushes;
 
-        public SolidColorBrush InputColor
+        public string InputBoxText
+        {
+            get { return this._inputBoxText; }
+            set
+            {
+                if(_inputBoxText != value)
+                {
+                    _inputBoxText = value;
+                    NotifyPropertyChanged("InputBoxText");
+                }
+            }
+        }
+
+        public Color InputColor
         {
             get { return this._inputColor; }
             set
@@ -56,7 +76,7 @@ namespace ColorConverter_WPF
             }
         }
 
-        public SolidColorBrush WebsafeColor
+        public Color WebsafeColor
         {
             get { return this._websafeColor; }
             set
@@ -69,20 +89,7 @@ namespace ColorConverter_WPF
             }
         }
 
-        public string WebsafeText
-        {
-            get { return this._websafeText; }
-            set
-            {
-                if (_websafeText != value)
-                {
-                    _websafeText = value;
-                    NotifyPropertyChanged("WebsafeText");
-                }
-            }
-        }
-
-        public SolidColorBrush ComplementColor
+        public Color ComplementColor
         {
             get { return this._complementColor; }
             set
@@ -95,20 +102,7 @@ namespace ColorConverter_WPF
             }
         }
 
-        public string ComplementText
-        {
-            get { return this._complementText; }
-            set
-            {
-                if (_complementText != value)
-                {
-                    _complementText = value;
-                    NotifyPropertyChanged("ComplementText");
-                }
-            }
-        }
-
-        public SolidColorBrush[] HarmonyColors
+        public Color[] HarmonyColors
         {
             get { return this._harmonyColors; }
             set
@@ -135,6 +129,32 @@ namespace ColorConverter_WPF
         public void NotifyPropertyChanged(string propName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+        }
+    }
+
+    public class ColorToSolidBrushOrStringConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            Color color = (Color)value;
+            if (targetType == typeof(Brush))
+            {
+                return new SolidColorBrush(color);
+            }
+            else if(targetType == typeof(string))
+            {
+                return "#" + color.ToString().Substring(3, 6);
+            }
+            else
+            {
+                return null;
+            }
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            Debug.WriteLine("ConvertBack called.");
+            SolidColorBrush brush = (SolidColorBrush)value;
+            return brush.Color;
         }
     }
 
