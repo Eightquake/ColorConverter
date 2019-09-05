@@ -74,5 +74,17 @@ namespace ColorConverter_WPF
 
             return colors;
         }
+
+        public static Color CalculateHarmonyColorFromColor(Color color, int index)
+        {
+            ColorConverter.GetHSLFromColor(color.R, color.G, color.B, out double baseHue, out double baseSat, out double baseLight);
+
+            int distance = 16,
+                thisDistance = distance * index;
+
+            double thisHue = baseHue - thisDistance;
+            System.Diagnostics.Debug.WriteLine(thisDistance);
+            return ColorConverter.CreateColorFromHSL(thisHue, baseSat, baseLight, 255);
+        }
     }
 }
