@@ -29,12 +29,6 @@ namespace ColorConverter_WPF
         {
             Color enteredColor = InputChecker.TestRegex(Model.InputBoxText);
             Model.InputColor = enteredColor;
-
-            Model.WebsafeColor = ColorCalculator.CalculateWebsafeFromColor(enteredColor);
-            Model.ComplementColor = ColorCalculator.CalculateComplementFromColor(enteredColor);
-            Model.HarmonyColors = ColorCalculator.CalculateHarmonyFromColor(enteredColor);
-        }
-    }
         }
     }
 }
