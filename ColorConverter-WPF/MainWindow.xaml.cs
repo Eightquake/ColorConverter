@@ -19,6 +19,8 @@ namespace ColorConverter_WPF
         {
             InitializeComponent();
             Model = MyColorBrushes.GetBrushes();
+
+            /* The grid for input texts and all of the colors should have the Model as datacontext, but overall the datacontext should be this class - so that custom commands and converters work */
             InputTextAndBoxGrid.DataContext = Model;
             this.DataContext = this;
         }
@@ -28,14 +30,9 @@ namespace ColorConverter_WPF
             Color enteredColor = InputChecker.TestRegex(Model.InputBoxText);
             Model.InputColor = enteredColor;
 
-            Color websafeColor = ColorCalculator.CalculateWebsafeFromColor(enteredColor);
-            Model.WebsafeColor = websafeColor;
-
-            Color complementColor = ColorCalculator.CalculateComplementFromColor(enteredColor);
-            Model.ComplementColor = complementColor;
-
-            Color[] harmonyColors = ColorCalculator.CalculateHarmonyFromColor(enteredColor);
-            Model.HarmonyColors = harmonyColors;
+            Model.WebsafeColor = ColorCalculator.CalculateWebsafeFromColor(enteredColor);
+            Model.ComplementColor = ColorCalculator.CalculateComplementFromColor(enteredColor);
+            Model.HarmonyColors = ColorCalculator.CalculateHarmonyFromColor(enteredColor);
         }
     }
 
@@ -45,9 +42,9 @@ namespace ColorConverter_WPF
         private Color _inputColor = new Color();
         private Color _websafeColor = new Color();
         private Color _complementColor = new Color();
-        private Color[] _harmonyColors = new Color[] { new Color(), new Color(), new Color(), new Color() };
+        private Color[] _harmonyColors = new Color[] { };
 
-        /* Singleton design, keep a reference to the one here */
+        /* Singleton design, keep a reference to the one instace here */
         private static MyColorBrushes _brushes;
 
         public string InputBoxText
@@ -115,6 +112,7 @@ namespace ColorConverter_WPF
             }
         }
 
+        /* Singleton design, no one should use constructor and use this instead. It will give the same instance to all or create it if it doesn't exist */
         public static MyColorBrushes GetBrushes()
         {
             if (_brushes == null)
