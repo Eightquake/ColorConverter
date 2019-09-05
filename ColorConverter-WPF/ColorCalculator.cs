@@ -59,7 +59,7 @@ namespace ColorConverter_WPF
                 distanceIndex = -(distance / (length - 1));
             Color[] colors = new Color[length];
 
-            for(int i = 0; i < colors.Length; i++)
+            for (int i = 0; i < colors.Length; i++)
             {
                 if (distanceIndex == 0) distanceIndex++;
 

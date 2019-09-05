@@ -27,6 +27,7 @@ namespace ColorConverter_WPF
 
             return alpha;
         }
+
         public static Color ConvertFromHexString(string hexStringR, string hexStringG, string hexStringB, string hexStringA = "FF")
         {
             byte red = Convert.ToByte(hexStringR, 16),
@@ -91,36 +92,36 @@ namespace ColorConverter_WPF
                 doubleB = blue / 255.0;
 
             double max = doubleR;
-            if(max < doubleG)
+            if (max < doubleG)
             {
                 max = doubleG;
             }
-            if(max < doubleB)
+            if (max < doubleB)
             {
                 max = doubleB;
             }
 
             double min = doubleR;
-            if(min > doubleG)
+            if (min > doubleG)
             {
                 min = doubleG;
             }
-            if(min > doubleB)
+            if (min > doubleB)
             {
                 min = doubleB;
             }
 
             double diff = max - min;
             lightness = (max + min) / 2;
-            
-            if(Math.Abs(diff) < 0.00001)
+
+            if (Math.Abs(diff) < 0.00001)
             {
                 saturation = 0;
                 hue = 0;
             }
             else
             {
-                if(lightness <= 0.5)
+                if (lightness <= 0.5)
                 {
                     saturation = diff / (max + min);
                 }
@@ -133,11 +134,11 @@ namespace ColorConverter_WPF
                 double GDist = (max - doubleG) / diff;
                 double BDist = (max - doubleB) / diff;
 
-                if(doubleR == max)
+                if (doubleR == max)
                 {
                     hue = BDist - GDist;
                 }
-                else if(doubleG == max)
+                else if (doubleG == max)
                 {
                     hue = 2 + RDist - BDist;
                 }
@@ -147,7 +148,7 @@ namespace ColorConverter_WPF
                 }
 
                 hue = hue * 60;
-                if(hue < 0)
+                if (hue < 0)
                 {
                     hue += 360;
                 }
@@ -167,7 +168,7 @@ namespace ColorConverter_WPF
             byte r, g, b;
             double p2;
 
-            if(lightness <= 0.5)
+            if (lightness <= 0.5)
             {
                 p2 = lightness * (1 + saturation);
             }
@@ -179,7 +180,7 @@ namespace ColorConverter_WPF
             double p1 = 2 * lightness - p2;
 
             double doubleR, doubleG, doubleB;
-            if(saturation == 0)
+            if (saturation == 0)
             {
                 doubleR = lightness;
                 doubleG = lightness;

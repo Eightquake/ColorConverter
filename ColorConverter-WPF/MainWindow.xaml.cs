@@ -1,8 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Data;
+﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -20,9 +16,8 @@ namespace ColorConverter_WPF
             InitializeComponent();
             Model = Model.GetBrushes();
 
-            /* The grid for input texts and all of the colors should have the Model as datacontext, but overall the datacontext should be this class - so that custom commands and converters work */
+            /* The grid for input texts and all of the colors should have the Model as datacontext */
             InputTextAndBoxGrid.DataContext = Model;
-            this.DataContext = this;
         }
 
         private void InputCheckCommand_Executed(object sender, ExecutedRoutedEventArgs e)
