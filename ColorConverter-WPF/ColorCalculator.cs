@@ -3,7 +3,7 @@ using System.Windows.Media;
 
 namespace ColorConverter_WPF
 {
-    internal static class ColorCalculator
+    public static class ColorCalculator
     {
         static public Color CalculateWebsafeFromColor(Color color)
         {
