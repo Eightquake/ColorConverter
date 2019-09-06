@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace ColorConverter_WPF
 {
@@ -24,6 +25,16 @@ namespace ColorConverter_WPF
         {
             Color enteredColor = InputChecker.TestRegex(Model.InputBoxText);
             Model.InputColor = enteredColor;
+        }
+
+        private void Rectangle_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Rectangle rectangle = (Rectangle)sender;
+
+            string newInput = "#" + rectangle.Fill.ToString().Substring(3, 6);
+
+            Model.InputColor = InputChecker.TestRegex(newInput);
+            Model.InputBoxText = newInput;
         }
     }
 }
