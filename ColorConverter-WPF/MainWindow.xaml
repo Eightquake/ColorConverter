@@ -92,10 +92,14 @@
                 <StackPanel>
                     <Label>RGB</Label>
                     <TextBox Padding="5" Margin="5, 0" IsReadOnly="True" Text="{Binding InputColor, Converter={StaticResource ColorToStringConverter}, ConverterParameter=RGB}" />
+                    <Label>RGB Percent</Label>
+                    <TextBox Padding="5" Margin="5, 0" IsReadOnly="True" Text="{Binding InputColor, Converter={StaticResource ColorToStringConverter}, ConverterParameter=RGBPercent}" />
                 </StackPanel>
                 <StackPanel>
                     <Label>HSL</Label>
                     <TextBox Padding="5" Margin="5, 0" IsReadOnly="True" Text="{Binding InputColor, Converter={StaticResource ColorToStringConverter}, ConverterParameter=HSL}" />
+                    <Label>HSV</Label>
+                    <TextBox Padding="5" Margin="5, 0" IsReadOnly="True" Text="{Binding InputColor, Converter={StaticResource ColorToStringConverter}, ConverterParameter=HSV}" />
                 </StackPanel>
             </WrapPanel>
         </ScrollViewer>

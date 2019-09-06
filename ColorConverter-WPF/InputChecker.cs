@@ -7,7 +7,7 @@ namespace ColorConverter_WPF
 {
     internal static class InputChecker
     {
-        static private readonly Regex Regex = new Regex(@"(^((?:(?:#)|(?:HEX)|(?:HEXA)))[\(\s]{0,2}([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})[\)\s]{0,2}$)|(^((?:(?:RGBA)|(?:RGB)|(?:HSL)|(?:HSLA)))[\(\s]{0,2}(\d+%?°?)[,\s]{0,2}(\d+%?)[,\s]{0,2}(\d+%?)[,\s]{0,2}([01]?[\.\,]?\d*)?[\)\s]{0,2}?$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        static private readonly Regex Regex = new Regex(@"(^((?:(?:#)|(?:HEX)|(?:HEXA)))[\(\s]{0,2}([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})[\)\s]{0,2}$)|(^((?:(?:RGBA)|(?:RGB)|(?:HSLA)|(?:HSL)|(?:HSVA)|(?:HSV)))[\(\s]{0,2}(\d+%?°?)[,\s]{0,2}(\d+%?)[,\s]{0,2}(\d+%?)[,\s]{0,2}([01]?[\.\,]?\d*)?[\)\s]{0,2}?$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         static public Color TestRegex(string enteredstring)
         {
@@ -44,6 +44,10 @@ namespace ColorConverter_WPF
                     {
                         // The user entered a color using HSL or HSLA
                         return ColorConverter.ConvertFromHSLString(match.Groups[8].Value, match.Groups[9].Value, match.Groups[10].Value, match.Groups[11].Value);
+                    }
+                    else if (colorSystem == "hsv" || colorSystem == "hsva")
+                    {
+                        return ColorConverter.ConvertFromHSVString(match.Groups[8].Value, match.Groups[9].Value, match.Groups[10].Value, match.Groups[11].Value);
                     }
                 }
                 catch (Exception e)

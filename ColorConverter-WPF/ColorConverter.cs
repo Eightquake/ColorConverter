@@ -75,13 +75,24 @@ namespace ColorConverter_WPF
 
         public static Color ConvertFromHSLString(string hslStringH, string hslStringS, string hslStringL, string hslStringA)
         {
-            float hue = float.Parse(hslStringH.Replace("°", "")),
-                        saturation = float.Parse(hslStringS.Replace("%", "")) / 100,
-                        lightness = float.Parse(hslStringL.Replace("%", "")) / 100;
+            double hue = float.Parse(hslStringH.Replace("°", "")),
+                        saturation = float.Parse(hslStringS.Replace("%", "")) / 100.0,
+                        lightness = float.Parse(hslStringL.Replace("%", "")) / 100.0;
 
             byte alpha = ConvertAlphaStringToByte(hslStringA);
 
             return CreateColorFromHSL(hue, saturation, lightness, alpha);
+        }
+
+        public static Color ConvertFromHSVString(string hsvStringH, string hsvStringS, string hsvStringL, string hsvStringA)
+        {
+            double hue = float.Parse(hsvStringH.Replace("°", "")),
+                        saturation = float.Parse(hsvStringS.Replace("%", "")) / 100.0,
+                        value = float.Parse(hsvStringL.Replace("%", "")) / 100.0;
+
+            byte alpha = ConvertAlphaStringToByte(hsvStringA);
+
+            return CreateColorFromHSV(hue, saturation, value, alpha);
         }
 
         public static Color ConvertFromRGBToHSL(byte red, byte green, byte blue, byte alpha)
@@ -157,6 +168,11 @@ namespace ColorConverter_WPF
             return CreateColorFromHSL(hue, saturation, lightness, alpha);
         }
 
+        public static Color ConvertFromRGBToHSV(byte red, byte green, byte blue, byte alpha)
+        {
+            throw new NotImplementedException();
+        }
+
         public static Color CreateColorFromRGB(byte red, byte green, byte blue, byte alpha)
         {
             /* Well I was going to add some exception checks here - but I realised I already use unsigned bytes so they can't be out of range. An exception would have been thrown already if that was the case */
@@ -165,7 +181,7 @@ namespace ColorConverter_WPF
 
         public static Color CreateColorFromHSL(double hue, double saturation, double lightness, byte alpha)
         {
-            byte r, g, b;
+            byte red, green, blue;
             double p2;
 
             if (lightness <= 0.5)
@@ -193,11 +209,11 @@ namespace ColorConverter_WPF
                 doubleB = QqhToRGB(p1, p2, hue - 120);
             }
 
-            r = (byte)(doubleR * 255.0);
-            g = (byte)(doubleG * 255.0);
-            b = (byte)(doubleB * 255.0);
+            red = (byte)Math.Round((doubleR * 255.0));
+            green = (byte)Math.Round((doubleG * 255.0));
+            blue = (byte)Math.Round((doubleB * 255.0));
 
-            return Color.FromArgb(alpha, r, g, b);
+            return Color.FromArgb(alpha, red, green, blue);
         }
 
         private static double QqhToRGB(double q1, double q2, double hue)
@@ -229,31 +245,78 @@ namespace ColorConverter_WPF
             }
         }
 
+        public static Color CreateColorFromHSV(double hue, double saturation, double value, byte alpha)
+        {
+            /* Code from a webpage about converting between different color systems */
+            byte red, green, blue;
+            double doubleR, doubleG, doubleB;
+            double i, f, p, q, t;
+
+            if(saturation == 0)
+            {
+                doubleR = value;
+                doubleG = value;
+                doubleB = value;
+            }
+            else
+            {
+                hue /= 60.0;
+                i = Math.Floor(hue);
+                f = hue - i;
+                p = value * (1 - saturation);
+                q = value * (1 - saturation * f);
+                t = value * (1 - saturation * (1 - f));
+
+                switch(i)
+                {
+                    case 0:
+                        doubleR = value;
+                        doubleG = t;
+                        doubleB = p;
+                        break;
+                    case 1:
+                        doubleR = q;
+                        doubleG = value;
+                        doubleB = p;
+                        break;
+                    case 2:
+                        doubleR = p;
+                        doubleG = value;
+                        doubleB = t;
+                        break;
+                    case 3:
+                        doubleR = p;
+                        doubleG = q;
+                        doubleB = value;
+                        break;
+                    case 4:
+                        doubleR = t;
+                        doubleG = p;
+                        doubleB = value;
+                        break;
+                    default:
+                        doubleR = value;
+                        doubleG = p;
+                        doubleB = q;
+                        break;
+                }
+            }
+
+            red = (byte)Math.Round(doubleR * 255.0, 0);
+            green = (byte)Math.Round(doubleG * 255.0, 0);
+            blue = (byte)Math.Round(doubleB * 255.0, 0);
+
+            return Color.FromArgb(alpha, red, green, blue);
+        }
+
         public static void GetHSLFromColor(byte red, byte green, byte blue, out double hue, out double saturation, out double lightness)
         {
+            /* Code from an internet page about color theory */
             double doubleR = red / 255.0,
                 doubleG = green / 255.0,
-                doubleB = blue / 255.0;
-
-            double max = doubleR;
-            if (max < doubleG)
-            {
-                max = doubleG;
-            }
-            if (max < doubleB)
-            {
-                max = doubleB;
-            }
-
-            double min = doubleR;
-            if (min > doubleG)
-            {
-                min = doubleG;
-            }
-            if (min > doubleB)
-            {
-                min = doubleB;
-            }
+                doubleB = blue / 255.0,
+                max = Math.Max(doubleR, Math.Max(doubleG, doubleB)),
+                min = Math.Min(doubleR, Math.Min(doubleG, doubleB));
 
             double diff = max - min;
             lightness = (max + min) / 2;
@@ -271,7 +334,7 @@ namespace ColorConverter_WPF
                 }
                 else
                 {
-                    saturation = diff / (2 - max - min);
+                    saturation = diff / (2.0 - max - min);
                 }
 
                 double RDist = (max - doubleR) / diff;
@@ -284,17 +347,73 @@ namespace ColorConverter_WPF
                 }
                 else if (doubleG == max)
                 {
-                    hue = 2 + RDist - BDist;
+                    hue = 2.0 + RDist - BDist;
                 }
                 else
                 {
-                    hue = 4 + GDist - RDist;
+                    hue = 4.0 + GDist - RDist;
                 }
 
-                hue = hue * 60;
-                if (hue < 0)
+                hue *= 60.0;
+                if (hue < 0.0)
                 {
-                    hue += 360;
+                    hue += 360.0;
+                }
+            }
+        }
+
+        public static void GetHSVFromColor(byte red, byte green, byte blue, out double hue, out double saturation, out double value)
+        {
+            /* Code from a StackOverflow answer */
+            double doubleR = red / 255.0,
+                doubleG = green / 255.0,
+                doubleB = blue / 255.0,
+                max = Math.Max(doubleR, Math.Max(doubleG, doubleB)),
+                min = Math.Min(doubleR, Math.Min(doubleG, doubleB));
+
+            value = max;
+            double delta = max - min;
+
+            if (Math.Abs(delta) < 0.00001)
+            {
+                saturation = 0;
+                hue = 0; /* Hue doesn't matter when saturation is 0 */
+            }
+            else
+            {
+                if (max > 0.0)
+                {
+                    saturation = (delta / max);
+                }
+                else
+                {
+                    /* If max is 0 then all of the RGB channels are 0 */
+                    saturation = 0;
+                    hue = 0;
+                    return;
+                }
+
+                if (doubleR >= max)
+                {
+                    hue = (doubleG - doubleB) / delta;
+                }
+                else
+                {
+                    if (doubleG >= max)
+                    {
+                        hue = 2.0 + (doubleB - doubleR) / delta;
+                    }
+                    else
+                    {
+                        hue = 4.0 + (doubleR - doubleG) / delta;
+                    }
+                }
+
+                hue *= 60.0;
+
+                if (hue < 0.0)
+                {
+                    hue += 360.0;
                 }
             }
         }
