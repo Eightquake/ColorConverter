@@ -83,7 +83,6 @@ namespace ColorConverter_WPF
                 thisDistance = distance * index;
 
             double thisHue = baseHue - thisDistance;
-            System.Diagnostics.Debug.WriteLine(thisDistance);
             return ColorConverter.CreateColorFromHSL(thisHue, baseSat, baseLight, 255);
         }
     }
