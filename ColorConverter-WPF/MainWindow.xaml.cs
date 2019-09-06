@@ -15,10 +15,12 @@ namespace ColorConverter_WPF
         public MainWindow()
         {
             InitializeComponent();
+
             Model = Model.GetBrushes();
 
             /* The grid for input texts and all of the colors should have the Model as datacontext */
             InputTextAndBoxGrid.DataContext = Model;
+            this.DataContext = this;
         }
 
         private void InputCheckCommand_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -31,10 +33,11 @@ namespace ColorConverter_WPF
         {
             Rectangle rectangle = (Rectangle)sender;
 
+            /* Color strings in System.Windows.Media is #AARRGGBB, but I only care about #RRGGBB, so I delete the alpha channel and also the #-sign, so add it again to the beginning of the string */
             string newInput = "#" + rectangle.Fill.ToString().Substring(3, 6);
 
-            Model.InputColor = InputChecker.TestRegex(newInput);
             Model.InputBoxText = newInput;
+            InputCheckCommand_Executed(null, null);
         }
     }
 }
