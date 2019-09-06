@@ -130,7 +130,7 @@ namespace ColorConverter_WPF
                     blue = color.B,
                     alpha = color.A;
 
-                decimal alphaDec = alpha / 255.0M;
+                double alphaDec = alpha / 255.0D;
 
                 string text = string.Format("RGB({0}, {1}, {2})", red, green, blue) +
                 string.Format("{0}{0}", Environment.NewLine) +
@@ -142,11 +142,11 @@ namespace ColorConverter_WPF
             else if (type == "RGBPERCENT")
             {
                 byte alpha = color.A,
-                    redPercent = (byte)(color.R / 255.0M * 100.0M),
-                    greenPercent = (byte)(color.G / 255.0M * 100.0M),
-                    bluePercent = (byte)(color.B / 255.0M * 100.0M);
+                    redPercent = (byte)(color.R / 255.0D * 100.0D),
+                    greenPercent = (byte)(color.G / 255.0D * 100.0D),
+                    bluePercent = (byte)(color.B / 255.0D * 100.0D);
 
-                decimal alphaDec = alpha / 255.0M;
+                double alphaDec = alpha / 255.0D;
 
                 string text = string.Format("RGB({0}%, {1}%, {2}%)", redPercent, greenPercent, bluePercent) +
                 string.Format("{0}{0}", Environment.NewLine) +
@@ -163,7 +163,7 @@ namespace ColorConverter_WPF
                 saturation = Math.Round(saturation * 100, 0);
                 lightness = Math.Round(lightness * 100, 0);
 
-                decimal alphaDec = color.A / 255.0M;
+                double alphaDec = color.A / 255.0D;
 
                 string text = string.Format("HSL({0}, {1}, {2})", hue, saturation, lightness) +
                 string.Format("{0}", Environment.NewLine) +
@@ -187,7 +187,7 @@ namespace ColorConverter_WPF
                 saturation = Math.Round(saturation * 100, 0);
                 hsvValue = Math.Round(hsvValue * 100, 0);
 
-                decimal alphaDec = color.A / 255.0M;
+                double alphaDec = color.A / 255.0D;
 
                 string text = string.Format("HSV({0}, {1}, {2})", hue, saturation, hsvValue) +
                 string.Format("{0}", Environment.NewLine) +
