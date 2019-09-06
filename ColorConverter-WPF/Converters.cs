@@ -121,7 +121,7 @@ namespace ColorConverter_WPF
                 blue = color.B.ToString("X2"),
                 alpha = color.A.ToString("X2");
 
-                return string.Format("#RRGGBB\t#{0}{1}{2}{4}#RRGGBBAA\t#{0}{1}{2}{3}{4}#AARRGGBB\t#{3}{0}{1}{2}", red, green, blue, alpha, Environment.NewLine);
+                return string.Format("#RGB\t#{0}{1}{2}{4}#RGBA\t#{0}{1}{2}{3}{4}#ARGB\t#{3}{0}{1}{2}", red, green, blue, alpha, Environment.NewLine);
             }
             else if (type == "RGB")
             {
@@ -130,26 +130,32 @@ namespace ColorConverter_WPF
                     blue = color.B,
                     alpha = color.A;
 
-                byte redPercent = (byte)(red / 255.0M * 100.0M);
-                byte greenPercent = (byte)(green / 255.0M * 100.0M);
-                byte bluePercent = (byte)(blue / 255.0M * 100.0M);
-
                 decimal alphaDec = alpha / 255.0M;
 
                 string text = string.Format("RGB({0}, {1}, {2})", red, green, blue) +
-                string.Format("{0}", Environment.NewLine) +
-                string.Format("RGB({0}%, {1}%, {2}%)", redPercent, greenPercent, bluePercent) +
                 string.Format("{0}{0}", Environment.NewLine) +
                 string.Format("RGBA({0}, {1}, {2}, {3}){5}RGBA({0}, {1}, {2}, {4})", red, green, blue, alpha, alphaDec, Environment.NewLine) +
                 string.Format("{0}{0}", Environment.NewLine) +
-                string.Format("RGBA({0}%, {1}%, {2}%, {4}){5}RGBA({0}%, {1}%, {2}%, {3})", redPercent, greenPercent, bluePercent, alpha, alphaDec, Environment.NewLine) +
+                string.Format("ARGB({3}, {0}, {1}, {2}){5}ARGB({4}, {0}, {1}, {2})", red, green, blue, alpha, alphaDec, Environment.NewLine);
+                return text;
+            }
+            else if (type == "RGBPERCENT")
+            {
+                byte alpha = color.A,
+                    redPercent = (byte)(color.R / 255.0M * 100.0M),
+                    greenPercent = (byte)(color.G / 255.0M * 100.0M),
+                    bluePercent = (byte)(color.B / 255.0M * 100.0M);
+
+                decimal alphaDec = alpha / 255.0M;
+
+                string text = string.Format("RGB({0}%, {1}%, {2}%)", redPercent, greenPercent, bluePercent) +
                 string.Format("{0}{0}", Environment.NewLine) +
-                string.Format("ARGB({3}, {0}, {1}, {2}){5}ARGB({4}, {0}, {1}, {2})", red, green, blue, alpha, alphaDec, Environment.NewLine) +
+                string.Format("RGBA({0}%, {1}%, {2}%, {3}){5}RGBA({0}%, {1}%, {2}%, {4})", redPercent, greenPercent, bluePercent, alpha, alphaDec, Environment.NewLine) +
                 string.Format("{0}{0}", Environment.NewLine) +
                 string.Format("ARGB({3}, {0}%, {1}%, {2}%){5}ARGB({4}, {0}%, {1}%, {2})", redPercent, greenPercent, bluePercent, alpha, alphaDec, Environment.NewLine);
                 return text;
             }
-            else if(type == "HSL")
+            else if (type == "HSL")
             {
                 ColorConverter.GetHSLFromColor(color.R, color.G, color.B, out double hue, out double saturation, out double lightness);
 
@@ -170,6 +176,30 @@ namespace ColorConverter_WPF
                 string.Format("HSLA({0}, {1}%, {2}%, {3})", hue, saturation, lightness, alphaDec) +
                 string.Format("{0}", Environment.NewLine) +
                 string.Format("HSLA({0}°, {1}%, {2}%, {3})", hue, saturation, lightness, alphaDec);
+
+                return text;
+            }
+            else if(type == "HSV")
+            {
+                ColorConverter.GetHSVFromColor(color.R, color.G, color.B, out double hue, out double saturation, out double hsvValue);
+
+                hue = Math.Round(hue, 0);
+                saturation = Math.Round(saturation * 100, 0);
+                hsvValue = Math.Round(hsvValue * 100, 0);
+
+                decimal alphaDec = color.A / 255.0M;
+
+                string text = string.Format("HSV({0}, {1}, {2})", hue, saturation, hsvValue) +
+                string.Format("{0}", Environment.NewLine) +
+                string.Format("HSV({0}, {1}%, {2}%)", hue, saturation, hsvValue) +
+                string.Format("{0}", Environment.NewLine) +
+                string.Format("HSV({0}°, {1}%, {2}%)", hue, saturation, hsvValue) +
+                string.Format("{0}{0}", Environment.NewLine) +
+                string.Format("HSVA({0}, {1}, {2}, {3})", hue, saturation, hsvValue, alphaDec) +
+                string.Format("{0}", Environment.NewLine) +
+                string.Format("HSVA({0}, {1}%, {2}%, {3})", hue, saturation, hsvValue, alphaDec) +
+                string.Format("{0}", Environment.NewLine) +
+                string.Format("HSVA({0}°, {1}%, {2}%, {3})", hue, saturation, hsvValue, alphaDec);
 
                 return text;
             }
