@@ -3,7 +3,7 @@ using System.Windows.Media;
 
 namespace ColorConverter_WPF
 {
-    internal static class ColorConverter
+    public static class ColorConverter
     {
         #region Helper methods for converters
 
@@ -16,11 +16,11 @@ namespace ColorConverter_WPF
             }
             else if (alphaString.EndsWith("%"))
             {
-                alpha = (byte)(255 * (decimal.Parse(alphaString) / 100));
+                alpha = (byte)(255 * (double.Parse(alphaString) / 100));
             }
             else if (alphaString.Contains(".") || alphaString.Contains(",") || alphaString == "1")
             {
-                alpha = (byte)(255 * (decimal.Parse(alphaString.Replace(".", ","))));
+                alpha = (byte)(255 * (double.Parse(alphaString.Replace(".", ","))));
             }
             else
             {
@@ -65,7 +65,7 @@ namespace ColorConverter_WPF
 
             if (rbgStringR.EndsWith("%"))
             {
-                red = (byte)(255 * int.Parse(rbgStringR.Replace("%", "")) / 100);
+                red = (byte)Math.Round(256.0D * double.Parse(rbgStringR.Replace("%", "")) / 100.0D, 0);
             }
             else
             {
@@ -74,7 +74,7 @@ namespace ColorConverter_WPF
 
             if (rgbStringG.EndsWith("%"))
             {
-                green = (byte)(255 * int.Parse(rgbStringG.Replace("%", "")) / 100);
+                green = (byte)Math.Round(256.0D * double.Parse(rgbStringG.Replace("%", "")) / 100.0D, 0);
             }
             else
             {
@@ -83,7 +83,7 @@ namespace ColorConverter_WPF
 
             if (rgbStringB.EndsWith("%"))
             {
-                blue = (byte)(255 * int.Parse(rgbStringB.Replace("%", "")) / 100);
+                blue = (byte)Math.Round(256.0D * double.Parse(rgbStringB.Replace("%", "")) / 100.0D, 0);
             }
             else
             {
@@ -99,9 +99,9 @@ namespace ColorConverter_WPF
 
         public static Color ConvertFromHSLString(string hslStringH, string hslStringS, string hslStringL, string hslStringA)
         {
-            double hue = float.Parse(hslStringH.Replace("°", "")),
-                        saturation = float.Parse(hslStringS.Replace("%", "")) / 100.0,
-                        lightness = float.Parse(hslStringL.Replace("%", "")) / 100.0;
+            double hue = double.Parse(hslStringH.Replace("°", "")),
+                        saturation = double.Parse(hslStringS.Replace("%", "")) / 100.0D,
+                        lightness = double.Parse(hslStringL.Replace("%", "")) / 100.0D;
 
             byte alpha = ConvertAlphaStringToByte(hslStringA);
 
@@ -113,19 +113,19 @@ namespace ColorConverter_WPF
             byte red, green, blue;
             double p2;
 
-            if (lightness <= 0.5)
+            if (lightness <= 0.5D)
             {
-                p2 = lightness * (1 + saturation);
+                p2 = lightness * (1.0D + saturation);
             }
             else
             {
-                p2 = lightness + saturation - lightness * saturation;
+                p2 = lightness + saturation - (lightness * saturation);
             }
 
-            double p1 = 2 * lightness - p2;
+            double p1 = (2.0D * lightness) - p2;
 
             double doubleR, doubleG, doubleB;
-            if (saturation == 0)
+            if (saturation == 0.0D)
             {
                 doubleR = lightness;
                 doubleG = lightness;
@@ -133,14 +133,14 @@ namespace ColorConverter_WPF
             }
             else
             {
-                doubleR = QqhToRGB(p1, p2, hue + 120);
+                doubleR = QqhToRGB(p1, p2, hue + 120.0D);
                 doubleG = QqhToRGB(p1, p2, hue);
-                doubleB = QqhToRGB(p1, p2, hue - 120);
+                doubleB = QqhToRGB(p1, p2, hue - 120.0D);
             }
 
-            red = (byte)Math.Round((doubleR * 255.0));
-            green = (byte)Math.Round((doubleG * 255.0));
-            blue = (byte)Math.Round((doubleB * 255.0));
+            red = (byte)(doubleR * 255.0D);
+            green = (byte)(doubleG * 255.0D);
+            blue = (byte)(doubleB * 255.0D);
 
             return Color.FromArgb(alpha, red, green, blue);
         }
@@ -148,78 +148,78 @@ namespace ColorConverter_WPF
         public static void GetHSLFromColor(byte red, byte green, byte blue, out double hue, out double saturation, out double lightness)
         {
             /* Code from an internet page about color theory */
-            double doubleR = red / 255.0,
-                doubleG = green / 255.0,
-                doubleB = blue / 255.0,
+            double doubleR = red / 255.0D,
+                doubleG = green / 255.0D,
+                doubleB = blue / 255.0D,
                 max = Math.Max(doubleR, Math.Max(doubleG, doubleB)),
                 min = Math.Min(doubleR, Math.Min(doubleG, doubleB));
 
             double diff = max - min;
             lightness = (max + min) / 2;
 
-            if (Math.Abs(diff) < 0.00001)
+            if (Math.Abs(diff) < 0.00001D)
             {
-                saturation = 0;
-                hue = 0;
+                saturation = 0.0D;
+                hue = 0.0D;
             }
             else
             {
-                if (lightness <= 0.5)
+                if (lightness <= 0.5D)
                 {
                     saturation = diff / (max + min);
                 }
                 else
                 {
-                    saturation = diff / (2.0 - max - min);
+                    saturation = diff / (2.0D - max - min);
                 }
 
-                double RDist = (max - doubleR) / diff;
-                double GDist = (max - doubleG) / diff;
-                double BDist = (max - doubleB) / diff;
+                double RMist = (max - doubleR) / diff;
+                double GMist = (max - doubleG) / diff;
+                double BMist = (max - doubleB) / diff;
 
                 if (doubleR == max)
                 {
-                    hue = BDist - GDist;
+                    hue = BMist - GMist;
                 }
                 else if (doubleG == max)
                 {
-                    hue = 2.0 + RDist - BDist;
+                    hue = 2.0D + RMist - BMist;
                 }
                 else
                 {
-                    hue = 4.0 + GDist - RDist;
+                    hue = 4.0D + GMist - RMist;
                 }
 
-                hue *= 60.0;
-                if (hue < 0.0)
+                hue *= 60.0D;
+                if (hue < 0.0D)
                 {
-                    hue += 360.0;
+                    hue += 360.0D;
                 }
             }
         }
 
         private static double QqhToRGB(double q1, double q2, double hue)
         {
-            if (hue > 360)
+            if (hue > 360.0D)
             {
-                hue -= 360;
+                hue -= 360.0D;
             }
-            else if (hue < 0)
+            else if (hue < 0.0D)
             {
-                hue += 360;
+                hue += 360.0D;
             }
 
-            if (hue < 60)
+            if (hue < 60.0D)
             {
-                return q1 + (q2 - q1) * hue / 60;
+                return q1 + (q2 - q1) * hue / 60.0D;
             }
-            else if (hue < 180)
+            else if (hue < 180.0D)
             {
                 return q2;
             }
-            else if (hue < 240)
+            else if (hue < 240.0D)
             {
-                return q1 + (q2 - q1) * (240 - hue) / 60;
+                return q1 + (q2 - q1) * (240.0D - hue) / 60.0D;
             }
             else
             {
@@ -233,9 +233,9 @@ namespace ColorConverter_WPF
 
         public static Color ConvertFromHSVString(string hsvStringH, string hsvStringS, string hsvStringL, string hsvStringA)
         {
-            double hue = float.Parse(hsvStringH.Replace("°", "")),
-                        saturation = float.Parse(hsvStringS.Replace("%", "")) / 100.0,
-                        value = float.Parse(hsvStringL.Replace("%", "")) / 100.0;
+            double hue = double.Parse(hsvStringH.Replace("°", "")),
+                        saturation = double.Parse(hsvStringS.Replace("%", "")) / 100.0D,
+                        value = double.Parse(hsvStringL.Replace("%", "")) / 100.0D;
 
             byte alpha = ConvertAlphaStringToByte(hsvStringA);
 
@@ -249,7 +249,7 @@ namespace ColorConverter_WPF
             double doubleR, doubleG, doubleB;
             double i, f, p, q, t;
 
-            if (saturation == 0)
+            if (saturation == 0.0D)
             {
                 doubleR = value;
                 doubleG = value;
@@ -257,7 +257,7 @@ namespace ColorConverter_WPF
             }
             else
             {
-                hue /= 60.0;
+                hue /= 60.0D;
                 i = Math.Floor(hue);
                 f = hue - i;
                 p = value * (1 - saturation);
@@ -304,9 +304,9 @@ namespace ColorConverter_WPF
                 }
             }
 
-            red = (byte)Math.Round(doubleR * 255.0, 0);
-            green = (byte)Math.Round(doubleG * 255.0, 0);
-            blue = (byte)Math.Round(doubleB * 255.0, 0);
+            red = (byte)(doubleR * 255.0D);
+            green = (byte)(doubleG * 255.0D);
+            blue = (byte)(doubleB * 255.0D);
 
             return Color.FromArgb(alpha, red, green, blue);
         }
@@ -314,23 +314,23 @@ namespace ColorConverter_WPF
         public static void GetHSVFromColor(byte red, byte green, byte blue, out double hue, out double saturation, out double value)
         {
             /* Code from a StackOverflow answer */
-            double doubleR = red / 255.0,
-                doubleG = green / 255.0,
-                doubleB = blue / 255.0,
+            double doubleR = red / 255.0D,
+                doubleG = green / 255.0D,
+                doubleB = blue / 255.0D,
                 max = Math.Max(doubleR, Math.Max(doubleG, doubleB)),
                 min = Math.Min(doubleR, Math.Min(doubleG, doubleB));
 
             value = max;
             double delta = max - min;
 
-            if (Math.Abs(delta) < 0.00001)
+            if (Math.Abs(delta) < 0.00001D)
             {
                 saturation = 0;
                 hue = 0; /* Hue doesn't matter when saturation is 0 */
             }
             else
             {
-                if (max > 0.0)
+                if (max > 0.0D)
                 {
                     saturation = (delta / max);
                 }
@@ -350,19 +350,19 @@ namespace ColorConverter_WPF
                 {
                     if (doubleG >= max)
                     {
-                        hue = 2.0 + (doubleB - doubleR) / delta;
+                        hue = 2.0D + (doubleB - doubleR) / delta;
                     }
                     else
                     {
-                        hue = 4.0 + (doubleR - doubleG) / delta;
+                        hue = 4.0D + (doubleR - doubleG) / delta;
                     }
                 }
 
-                hue *= 60.0;
+                hue *= 60.0D;
 
-                if (hue < 0.0)
+                if (hue < 0.0D)
                 {
-                    hue += 360.0;
+                    hue += 360.0D;
                 }
             }
         }
