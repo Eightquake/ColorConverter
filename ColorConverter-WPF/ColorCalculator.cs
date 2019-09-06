@@ -50,40 +50,18 @@ namespace ColorConverter_WPF
             return Color.FromArgb(255, compR, compG, compB);
         }
 
-        static public Color[] CalculateHarmonyFromColor(Color color)
-        {
-            ColorConverter.GetHSLFromColor(color.R, color.G, color.B, out double baseHue, out double baseSat, out double baseLight);
-
-            int length = 4,
-                distance = 6,
-                distanceIndex = -(distance / (length - 1));
-            Color[] colors = new Color[length];
-
-            for (int i = 0; i < colors.Length; i++)
-            {
-                if (distanceIndex == 0) distanceIndex++;
-
-                int thisDistance = distance * distanceIndex++;
-
-                double thisHue = Math.Round((baseHue - thisDistance) - 360.0f * Math.Floor((baseHue - thisDistance) / 360.0f));
-
-                Color thisColor = ColorConverter.CreateColorFromHSL(thisHue, baseSat, baseLight, 255);
-
-                colors[i] = thisColor;
-            }
-
-            return colors;
-        }
-
         public static Color CalculateHarmonyColorFromColor(Color color, int index)
         {
             ColorConverter.GetHSLFromColor(color.R, color.G, color.B, out double baseHue, out double baseSat, out double baseLight);
 
-            int distance = 16,
-                thisDistance = distance * index;
+            int thisIndex = index * 4;
+            double thisHue = baseHue + thisIndex,
+                   thisLight = baseLight + (thisIndex / 100.0);
 
-            double thisHue = baseHue - thisDistance;
-            return ColorConverter.CreateColorFromHSL(thisHue, baseSat, baseLight, 255);
+            if (thisLight > 1.0) thisLight = 1.0;
+            else if (thisLight < 0.0) thisLight = 0.0;
+
+            return ColorConverter.CreateColorFromHSL(thisHue, baseSat, thisLight, 255);
         }
     }
 }
