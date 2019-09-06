@@ -6,6 +6,7 @@ namespace ColorConverter_WPF
     internal static class ColorConverter
     {
         #region Helper methods for converters
+
         private static byte ConvertAlphaStringToByte(string alphaString)
         {
             byte alpha;
@@ -28,8 +29,11 @@ namespace ColorConverter_WPF
 
             return alpha;
         }
-        #endregion
+
+        #endregion Helper methods for converters
+
         #region Hex Color method to convert
+
         public static Color ConvertFromHexString(string hexStringR, string hexStringG, string hexStringB, string hexStringA)
         {
             byte red = Convert.ToByte(hexStringR, 16),
@@ -49,8 +53,11 @@ namespace ColorConverter_WPF
 
             return Color.FromArgb(alpha, red, green, blue);
         }
-        #endregion
+
+        #endregion Hex Color method to convert
+
         #region RGB Color method to convert
+
         public static Color ConvertFromRGBString(string rbgStringR, string rgbStringG, string rgbStringB, string rgbStringA)
         {
             byte red, green, blue;
@@ -85,8 +92,11 @@ namespace ColorConverter_WPF
 
             return Color.FromArgb(alpha, red, green, blue);
         }
-        #endregion
+
+        #endregion RGB Color method to convert
+
         #region HSL Color methods to convert and create
+
         public static Color ConvertFromHSLString(string hslStringH, string hslStringS, string hslStringL, string hslStringA)
         {
             double hue = float.Parse(hslStringH.Replace("°", "")),
@@ -97,7 +107,7 @@ namespace ColorConverter_WPF
 
             return CreateColorFromHSL(hue, saturation, lightness, alpha);
         }
-        
+
         public static Color CreateColorFromHSL(double hue, double saturation, double lightness, byte alpha)
         {
             byte red, green, blue;
@@ -216,8 +226,11 @@ namespace ColorConverter_WPF
                 return q1;
             }
         }
-        #endregion
+
+        #endregion HSL Color methods to convert and create
+
         #region HSV Color methods to convert and create
+
         public static Color ConvertFromHSVString(string hsvStringH, string hsvStringS, string hsvStringL, string hsvStringA)
         {
             double hue = float.Parse(hsvStringH.Replace("°", "")),
@@ -236,7 +249,7 @@ namespace ColorConverter_WPF
             double doubleR, doubleG, doubleB;
             double i, f, p, q, t;
 
-            if(saturation == 0)
+            if (saturation == 0)
             {
                 doubleR = value;
                 doubleG = value;
@@ -251,33 +264,38 @@ namespace ColorConverter_WPF
                 q = value * (1 - saturation * f);
                 t = value * (1 - saturation * (1 - f));
 
-                switch(i)
+                switch (i)
                 {
                     case 0:
                         doubleR = value;
                         doubleG = t;
                         doubleB = p;
                         break;
+
                     case 1:
                         doubleR = q;
                         doubleG = value;
                         doubleB = p;
                         break;
+
                     case 2:
                         doubleR = p;
                         doubleG = value;
                         doubleB = t;
                         break;
+
                     case 3:
                         doubleR = p;
                         doubleG = q;
                         doubleB = value;
                         break;
+
                     case 4:
                         doubleR = t;
                         doubleG = p;
                         doubleB = value;
                         break;
+
                     default:
                         doubleR = value;
                         doubleG = p;
@@ -348,6 +366,7 @@ namespace ColorConverter_WPF
                 }
             }
         }
-        #endregion
+
+        #endregion HSV Color methods to convert and create
     }
 }

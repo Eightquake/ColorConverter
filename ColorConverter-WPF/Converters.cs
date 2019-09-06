@@ -179,7 +179,7 @@ namespace ColorConverter_WPF
 
                 return text;
             }
-            else if(type == "HSV")
+            else if (type == "HSV")
             {
                 ColorConverter.GetHSVFromColor(color.R, color.G, color.B, out double hue, out double saturation, out double hsvValue);
 
@@ -206,6 +206,7 @@ namespace ColorConverter_WPF
 
             return DependencyProperty.UnsetValue;
         }
+
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             throw new NotImplementedException();
