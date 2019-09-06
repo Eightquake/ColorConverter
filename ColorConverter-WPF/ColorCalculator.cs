@@ -43,11 +43,9 @@ namespace ColorConverter_WPF
 
         static public Color CalculateComplementFromColor(Color color)
         {
-            byte compR = (byte)(Math.Max(color.R, Math.Max(color.G, color.B)) + Math.Min(color.R, Math.Min(color.G, color.B)) - color.R);
-            byte compG = (byte)(Math.Max(color.R, Math.Max(color.G, color.B)) + Math.Min(color.R, Math.Min(color.G, color.B)) - color.G);
-            byte compB = (byte)(Math.Max(color.R, Math.Max(color.G, color.B)) + Math.Min(color.R, Math.Min(color.G, color.B)) - color.B);
+            ColorConverter.GetHSLFromColor(color.R, color.G, color.B, out double hue, out double saturation, out double lightness);
 
-            return Color.FromArgb(255, compR, compG, compB);
+            return ColorConverter.CreateColorFromHSL(hue + 180, saturation, lightness, 255);
         }
 
         public static Color CalculateHarmonyColorFromColor(Color color, int index)
