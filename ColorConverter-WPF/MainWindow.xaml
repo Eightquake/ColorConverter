@@ -1,0 +1,105 @@
+﻿<Window x:Class="ColorConverter_WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:self="clr-namespace:ColorConverter_WPF"
+        Title="ColorConverter" WindowStartupLocation="CenterScreen" Width="815" Height="600" MinWidth="380" MaxWidth="1035">
+    <Window.CommandBindings>
+        <CommandBinding Command="self:CustomCommands.CheckInput"  Executed="InputCheckCommand_Executed" />
+    </Window.CommandBindings>
+    <Window.Resources>
+        <self:ColorToSolidBrushOrStringConverter x:Key="ColorToSolidBrushOrStringConverter" />
+        <self:ColorToWebsafeColorOrStringConverter x:Key="ColorToWebsafeColorOrStringConverter" />
+        <self:ColorToComplementColorOrStringConverter x:Key="ColorToComplementColorOrStringConverter" />
+        <self:ColorToHarmoyColorOrStringConverter x:Key="ColorToHarmoyColorOrStringConverter" />
+        <self:ColorToStringConverter x:Key="ColorToStringConverter" />
+    </Window.Resources>
+    <Grid Name="InputTextAndBoxGrid" VerticalAlignment="Top">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="400" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="200" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Rectangle Fill="{Binding InputColor, Converter={StaticResource ColorToSolidBrushOrStringConverter}}" HorizontalAlignment="Left" Grid.ColumnSpan="3" VerticalAlignment="Top" Width="{Binding ActualWidth, ElementName=InputTextAndBoxGrid}" Height="200" />
+        <StackPanel Grid.Column="1" Background="#FF666666" Height="120" Width="400" VerticalAlignment="Center">
+            <Label FontSize="18" HorizontalAlignment="Center" Foreground="White">Enter a color</Label>
+            <Label HorizontalAlignment="Center" Foreground="White" Margin="0,-5,0,0">Using hex, RGB, HSL or HSV.</Label>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,0">
+                <TextBox Height="23" TextWrapping="NoWrap" Text="{Binding InputBoxText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="150">
+                    <TextBox.InputBindings>
+                        <KeyBinding Command="self:CustomCommands.CheckInput" Key="Return" />
+                    </TextBox.InputBindings>
+                </TextBox>
+                <Button Content="Convert!" Width="75" Command="self:CustomCommands.CheckInput" />
+            </StackPanel>
+        </StackPanel>
+        <ScrollViewer Grid.Row="1" Grid.ColumnSpan="3" Width="{Binding ActualWidth}">
+            <WrapPanel Margin="5, 5">
+                <StackPanel Width="100" Margin="5,0">
+                    <Label HorizontalAlignment="Center">3 steps darker</Label>
+                    <Rectangle MouseDown="Rectangle_MouseDown" Fill="{Binding InputColor, Converter={StaticResource ColorToHarmoyColorOrStringConverter}, ConverterParameter=-3}" Height="50" Width="100" Cursor="Hand" />
+                    <TextBox TextAlignment="Center" Text="{Binding InputColor, Converter={StaticResource ColorToHarmoyColorOrStringConverter}, ConverterParameter=-3}" IsReadOnly="True" />
+                </StackPanel>
+                <StackPanel Width="100" Margin="5,0">
+                    <Label HorizontalAlignment="Center">2 steps darker</Label>
+                    <Rectangle MouseDown="Rectangle_MouseDown" Fill="{Binding InputColor, Converter={StaticResource ColorToHarmoyColorOrStringConverter}, ConverterParameter=-2}" Height="50" Width="100" Cursor="Hand" />
+                    <TextBox TextAlignment="Center" Text="{Binding InputColor, Converter={StaticResource ColorToHarmoyColorOrStringConverter}, ConverterParameter=-2}" IsReadOnly="True" />
+                </StackPanel>
+                <StackPanel Width="100" Margin="5,0">
+                    <Label HorizontalAlignment="Center">1 step darker</Label>
+                    <Rectangle MouseDown="Rectangle_MouseDown" Fill="{Binding InputColor, Converter={StaticResource ColorToHarmoyColorOrStringConverter}, ConverterParameter=-1}" Height="50" Width="100" Cursor="Hand" />
+                    <TextBox TextAlignment="Center" Text="{Binding InputColor, Converter={StaticResource ColorToHarmoyColorOrStringConverter}, ConverterParameter=-1}" IsReadOnly="True" />
+                </StackPanel>
+                <StackPanel Width="100" Margin="5,0">
+                    <Label HorizontalAlignment="Center">Base</Label>
+                    <Rectangle Fill="{Binding InputColor, Converter={StaticResource ColorToSolidBrushOrStringConverter}}" Height="50" Width="100" Cursor="Arrow" />
+                    <TextBox TextAlignment="Center" Text="{Binding InputColor, Converter={StaticResource ColorToSolidBrushOrStringConverter}}" IsReadOnly="True" />
+                </StackPanel>
+                <StackPanel Width="100" Margin="5,0">
+                    <Label HorizontalAlignment="Center">1 step lighter</Label>
+                    <Rectangle MouseDown="Rectangle_MouseDown" Fill="{Binding InputColor, Converter={StaticResource ColorToHarmoyColorOrStringConverter}, ConverterParameter=1}" Height="50" Width="100" Cursor="Hand" />
+                    <TextBox TextAlignment="Center" Text="{Binding InputColor, Converter={StaticResource ColorToHarmoyColorOrStringConverter}, ConverterParameter=1}" IsReadOnly="True" />
+                </StackPanel>
+                <StackPanel Width="100" Margin="5,0">
+                    <Label HorizontalAlignment="Center">2 steps lighter</Label>
+                    <Rectangle MouseDown="Rectangle_MouseDown" Fill="{Binding InputColor, Converter={StaticResource ColorToHarmoyColorOrStringConverter}, ConverterParameter=2}" Height="50" Width="100" Cursor="Hand" />
+                    <TextBox TextAlignment="Center" Text="{Binding InputColor, Converter={StaticResource ColorToHarmoyColorOrStringConverter}, ConverterParameter=2}" IsReadOnly="True" />
+                </StackPanel>
+                <StackPanel Width="100" Margin="5,0">
+                    <Label HorizontalAlignment="Center">3 steps lighter</Label>
+                    <Rectangle MouseDown="Rectangle_MouseDown" Fill="{Binding InputColor, Converter={StaticResource ColorToHarmoyColorOrStringConverter}, ConverterParameter=3}" Height="50" Width="100" Cursor="Hand" />
+                    <TextBox TextAlignment="Center" Text="{Binding InputColor, Converter={StaticResource ColorToHarmoyColorOrStringConverter}, ConverterParameter=3}" IsReadOnly="True" />
+                </StackPanel>
+                <StackPanel Width="100" Margin="5, 0">
+                    <Label HorizontalAlignment="Center">Websafe</Label>
+                    <Rectangle MouseDown="Rectangle_MouseDown" Fill="{Binding InputColor, Converter={StaticResource ColorToWebsafeColorOrStringConverter}}" Height="50" Cursor="Hand" />
+                    <TextBox TextAlignment="Center" Text="{Binding InputColor, Converter={StaticResource ColorToWebsafeColorOrStringConverter}}" IsReadOnly="True" />
+                </StackPanel>
+                <StackPanel Width="100" Margin="5,0">
+                    <Label HorizontalAlignment="Center">Complement</Label>
+                    <Rectangle MouseDown="Rectangle_MouseDown" Fill="{Binding InputColor, Converter={StaticResource ColorToComplementColorOrStringConverter}}" Height="50" Cursor="Hand" />
+                    <TextBox TextAlignment="Center" Text="{Binding InputColor, Converter={StaticResource ColorToComplementColorOrStringConverter}}" IsReadOnly="True" />
+                </StackPanel>
+                <StackPanel>
+                    <Label>Hex</Label>
+                    <TextBox Padding="5" Margin="5, 0" IsReadOnly="True" Text="{Binding InputColor, Converter={StaticResource ColorToStringConverter}, ConverterParameter=Hex}" />
+                </StackPanel>
+                <StackPanel>
+                    <Label>RGB</Label>
+                    <TextBox Padding="5" Margin="5, 0" IsReadOnly="True" Text="{Binding InputColor, Converter={StaticResource ColorToStringConverter}, ConverterParameter=RGB}" />
+                    <Label>RGB Percent</Label>
+                    <TextBox Padding="5" Margin="5, 0" IsReadOnly="True" Text="{Binding InputColor, Converter={StaticResource ColorToStringConverter}, ConverterParameter=RGBPercent}" />
+                </StackPanel>
+                <StackPanel>
+                    <Label>HSL</Label>
+                    <TextBox Padding="5" Margin="5, 0" IsReadOnly="True" Text="{Binding InputColor, Converter={StaticResource ColorToStringConverter}, ConverterParameter=HSL}" />
+                    <Label>HSV</Label>
+                    <TextBox Padding="5" Margin="5, 0" IsReadOnly="True" Text="{Binding InputColor, Converter={StaticResource ColorToStringConverter}, ConverterParameter=HSV}" />
+                </StackPanel>
+            </WrapPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

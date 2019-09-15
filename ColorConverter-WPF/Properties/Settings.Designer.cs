@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ColorConverter.Properties
+namespace ColorConverter_WPF.Properties
 {
 
 

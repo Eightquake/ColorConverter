@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29215.179
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorConverter-WPF", "ColorConverter-WPF\ColorConverter-WPF.csproj", "{19B5F0D5-0B19-4457-A113-9D4CE45E4857}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorConverter-WPFTests", "ColorConverter-WPFTests\ColorConverter-WPFTests.csproj", "{7C124892-04B9-4933-8975-08BC6369DAE0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{19B5F0D5-0B19-4457-A113-9D4CE45E4857}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19B5F0D5-0B19-4457-A113-9D4CE45E4857}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19B5F0D5-0B19-4457-A113-9D4CE45E4857}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19B5F0D5-0B19-4457-A113-9D4CE45E4857}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C124892-04B9-4933-8975-08BC6369DAE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C124892-04B9-4933-8975-08BC6369DAE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C124892-04B9-4933-8975-08BC6369DAE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C124892-04B9-4933-8975-08BC6369DAE0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {18E1E106-D66F-4A44-B304-0EC97F8071BF}
+	EndGlobalSection
+EndGlobal

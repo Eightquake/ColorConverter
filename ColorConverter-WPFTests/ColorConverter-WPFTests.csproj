@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{107AEC62-808E-40D4-AF7F-89C85D915340}</ProjectGuid>
+    <ProjectGuid>{7C124892-04B9-4933-8975-08BC6369DAE0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ColorConverterTests</RootNamespace>
-    <AssemblyName>ColorConverterTests</AssemblyName>
+    <RootNamespace>ColorConverter_WPFTests</RootNamespace>
+    <AssemblyName>ColorConverter-WPFTests</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -45,8 +45,8 @@
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\MSTest.TestFramework.1.3.2\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
-    <Reference Include="System.Drawing" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -57,17 +57,16 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="ModelTests.cs" />
-    <Compile Include="PresenterTests.cs" />
+    <Compile Include="ColorConverterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ColorConverter.csproj">
-      <Project>{F4BF73B8-E116-4543-B690-DB3615B02BF0}</Project>
-      <Name>ColorConverter</Name>
+    <ProjectReference Include="..\ColorConverter-WPF\ColorConverter-WPF.csproj">
+      <Project>{19B5F0D5-0B19-4457-A113-9D4CE45E4857}</Project>
+      <Name>ColorConverter-WPF</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
