@@ -17,6 +17,8 @@ namespace ColorConverter_WPF
             InitializeComponent();
 
             Model = Model.GetBrushes();
+            Model.InputColor = Color.FromArgb(255, 170, 187, 204);
+            Model.InputBoxText = "#AABBCC";
 
             /* The grid for input texts and all of the colors should have the Model as datacontext */
             InputTextAndBoxGrid.DataContext = Model;
